@@ -7,11 +7,7 @@ import { Menu, X, ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { navLinks } from "../data/data";
 import { Button } from "@/components/ui/button";
-import {
-  IconChevronRight,
-  IconPhoneCall,
-  IconMessageCircle,
-} from "@tabler/icons-react";
+import { IconChevronRight, IconPhone, IconFileText } from "@tabler/icons-react";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -298,36 +294,36 @@ export default function Navbar() {
               whileTap={{ scale: 0.95 }}
               className="flex items-center gap-3 p-3 rounded-lg transition-colors duration-200 hover:bg-red-50 cursor-pointer"
             >
-              <IconPhoneCall size={24} className="text-red-500 flex-shrink-0" />
+              <IconFileText size={24} className="text-red-500 flex-shrink-0" />
               <div className="flex flex-col">
                 <span className="font-semibold text-slate-700">
                   Hubungi Kami
                 </span>
-                <Link
+                <a
                   href="https://simaswilyam.dinkesjatengprov.go.id/daftar/#/home"
                   className="text-black font-bold hover:text-red-600 transition-colors"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  0298-591084
-                </Link>
+                  Pendaftaran
+                </a>
               </div>
             </motion.div>
 
-            {/* Kirim Pesan */}
+            {/* Whatsapp */}
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="flex items-center gap-3 p-3 rounded-lg transition-colors duration-200 hover:bg-blue-50 cursor-pointer"
             >
-              <IconMessageCircle size={24} className="flex-shrink-0" />
+              <IconPhone size={24} className="flex-shrink-0 text-green-600" />
               <div className="flex flex-col">
-                <span className="font-semibold text-slate-700">
-                  Kirim Pesan
-                </span>
+                <span className="font-semibold text-slate-700">Whatsapp</span>
                 <a
                   href="https://wa.me/628112891084"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-bold hover:text-gray-800 transition-colors"
+                  className="font-bold text-green-600 hover:text-green-800 transition-colors"
                 >
                   081-1289-1084
                 </a>
@@ -336,7 +332,7 @@ export default function Navbar() {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="md:hidden pr-3">
             <Button
               variant="ghost"
               size="icon"
@@ -381,32 +377,34 @@ export default function Navbar() {
             >
               {/* Hubungi Kami */}
               <div className="flex items-start gap-3 group cursor-pointer hover:bg-red-50 p-2 rounded transition-colors">
-                <IconPhoneCall size={20} className="text-red-500 mt-1" />
+                <IconFileText size={20} className="text-red-500 mt-1" />
                 <div className="flex flex-col">
                   <span className="text-sm font-semibold text-slate-700">
                     Hubungi Kami
                   </span>
-                  <Link
+                  <a
                     href="https://simaswilyam.dinkesjatengprov.go.id/daftar/#/home"
                     className="text-black font-bold hover:text-red-600 transition-colors"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     0298-591084
-                  </Link>
+                  </a>
                 </div>
               </div>
 
-              {/* Kirim Pesan */}
+              {/* Whatsapp */}
               <div className="flex items-start gap-3 group cursor-pointer hover:bg-blue-50 p-2 rounded transition-colors">
-                <IconMessageCircle size={20} className="mt-1" />
+                <IconPhone size={20} className="mt-1 text-green-600" />
                 <div className="flex flex-col">
                   <span className="text-sm font-semibold text-slate-700">
-                    Kirim Pesan
+                    Whatsapp
                   </span>
                   <a
                     href="https://wa.me/628112891084"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-bold hover:text-gray-800 transition-colors"
+                    className="font-bold text-green-600 hover:text-green-800 transition-colors"
                   >
                     081-1289-1084
                   </a>
