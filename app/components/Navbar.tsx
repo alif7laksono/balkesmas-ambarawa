@@ -304,7 +304,7 @@ export default function Navbar() {
                   Hubungi Kami
                 </span>
                 <Link
-                  href="tel:0298591084"
+                  href="https://simaswilyam.dinkesjatengprov.go.id/daftar/#/home"
                   className="text-black font-bold hover:text-red-600 transition-colors"
                 >
                   0298-591084
@@ -386,12 +386,12 @@ export default function Navbar() {
                   <span className="text-sm font-semibold text-slate-700">
                     Hubungi Kami
                   </span>
-                  <a
-                    href="tel:0298591084"
-                    className="text-black font-bold text-sm hover:text-red-600 transition-colors"
+                  <Link
+                    href="https://simaswilyam.dinkesjatengprov.go.id/daftar/#/home"
+                    className="text-black font-bold hover:text-red-600 transition-colors"
                   >
                     0298-591084
-                  </a>
+                  </Link>
                 </div>
               </div>
 
@@ -406,7 +406,7 @@ export default function Navbar() {
                     href="https://wa.me/628112891084"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-bold text-sm hover:text-gray-800 transition-colors"
+                    className="font-bold hover:text-gray-800 transition-colors"
                   >
                     081-1289-1084
                   </a>
