@@ -344,9 +344,10 @@ const pdfFiles = [
     description: "Alur distribusi makanan pasien sesuai kebutuhan gizi.",
     src: "/pdf/99_SOP_VI_2024 SOP GIZI DISTRIBUSI MAKANAN.pdf",
   },
-   {
+  {
     title: "SOP Gizi Pemesanan Makan Pasien Rawat Inap",
-    description: "Prosedur pemesanan makanan untuk pasien rawat inap sesuai kebutuhan gizi.",
+    description:
+      "Prosedur pemesanan makanan untuk pasien rawat inap sesuai kebutuhan gizi.",
     src: "/pdf/100_SOP_VI_2024 SOP GIZI PEMESANAN MAKAN PASIEN RANAP.pdf",
   },
   {
@@ -361,7 +362,8 @@ const pdfFiles = [
   },
   {
     title: "SOP Screening Gizi Pasien",
-    description: "Prosedur screening status gizi pasien untuk mendeteksi risiko gizi.",
+    description:
+      "Prosedur screening status gizi pasien untuk mendeteksi risiko gizi.",
     src: "/pdf/103_SOP_VI_2024 SOP SCREENING GIZI PASIEN.pdf",
   },
 ];
