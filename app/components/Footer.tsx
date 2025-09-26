@@ -37,17 +37,23 @@ export default function Footer() {
 
   const mainMenus = [
     { name: "Beranda", href: "/" },
-    { name: "Profil", href: "/profil" },
-    { name: "Layanan", href: "/layanan" },
-    { name: "Artikel", href: "/artikel" },
-    { name: "Kontak", href: "/kontak" },
+    { name: "Profil", href: "/profil/tentang-kami" },
+    { name: "Layanan", href: "/informasi/jadwal-praktek-dokter" },
+    // { name: "Artikel", href: "/artikel" },
+    { name: "Kontak", href: "/informasi/kontak" },
   ];
 
   const visitLinks = [
-    { name: "Kemenkes RI", href: "https://www.kemkes.go.id" },
-    { name: "Dinkes Provinsi Jateng", href: "https://dinkes.jatengprov.go.id" },
-    { name: "BPJS Kesehatan", href: "https://www.bpjs-kesehatan.go.id" },
-    { name: "Paijo GR", href: "https://dinkes.jatengprov.go.id/aplikasi-paijo-gr/" },
+    { name: "Kemenkes RI", href: "https://kemkes.go.id/id/home" },
+    {
+      name: "Dinkes Provinsi Jateng",
+      href: "https://dinkes.jatengprov.go.id/",
+    },
+    { name: "BPJS Kesehatan", href: "https://www.bpjs-kesehatan.go.id/#/" },
+    {
+      name: "Paijo GR",
+      href: "https://dinkes.jatengprov.go.id/aplikasi-paijo-gr/",
+    },
   ];
 
   const instagramPosts = [
