@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { raleway } from "@/app/utils/fonts";
 
 export const metadata: Metadata = {
   title: "Baslkesmas Ambarawa - Balai Kesehatan Masyarakat Wilayah Ambarawa",
@@ -13,8 +14,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`antialiased`}>{children}</body>
+    <html lang="en" suppressHydrationWarning={true}>
+      <body className={`${raleway.className} antialiased`}>{children}</body>
     </html>
   );
 }

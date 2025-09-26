@@ -1,3 +1,5 @@
+// app/utils/fonts.ts
+
 import {
   Bodoni_Moda,
   Montserrat,
@@ -16,7 +18,12 @@ import {
   Playfair_Display,
   Dancing_Script,
   Ibarra_Real_Nova,
+  Inter,
 } from "next/font/google";
+
+export const inter = Inter({
+  subsets: ["cyrillic", ]
+})
 
 export const bodoni = Bodoni_Moda({
   subsets: ["latin"],
