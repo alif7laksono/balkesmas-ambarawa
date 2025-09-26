@@ -95,7 +95,7 @@ export const navLinks: NavLink[] = [
       { name: "Module", href: "/pelayanan/module" },
     ],
   },
-  { name: "Berita", href: "/berita" },
+  // { name: "Berita", href: "/berita" },
   {
     name: "Informasi",
     href: "/#",
@@ -110,6 +110,7 @@ export const navLinks: NavLink[] = [
         href: "/informasi/jam-kunjung-pasien",
       },
       { name: "FAQ", href: "/informasi/faq" },
+      { name: "Alur Pelayanan", href: "/informasi/alur-pelayanan" },
     ],
   },
   { name: "Inovasi", href: "/inovasi" },

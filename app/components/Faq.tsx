@@ -2,14 +2,8 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { faqs } from "../data/data";
-import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import {
-  IconChevronDown,
-  IconHelp,
-  IconMail,
-  IconPhone,
-} from "@tabler/icons-react";
+import { IconChevronDown, IconHelp } from "@tabler/icons-react";
 import {
   containerVariants,
   itemVariants,
