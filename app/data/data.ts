@@ -4,7 +4,7 @@ export const navLinks: NavLink[] = [
   { name: "Home", href: "/" },
   {
     name: "Profil",
-    href: "/profil",
+    href: "/profil/tentang-kami",
     subLinks: [
       { name: "Tentang Kami", href: "/profil/tentang-kami" },
       { name: "Sejarah", href: "/profil/sejarah" },
@@ -18,7 +18,7 @@ export const navLinks: NavLink[] = [
   },
   {
     name: "Pelayanan",
-    href: "/pelayanan",
+    href: "",
     subLinks: [
       { name: "Perorangan", href: "/pelayanan/perorangan" },
       { name: "Masyarakat", href: "/pelayanan/masyarakat" },
@@ -89,7 +89,7 @@ export const navLinks: NavLink[] = [
   // { name: "Pengaduan", href: "/pengaduan" },
   {
     name: "Standard Pelayanan Publik",
-    href: "/pelayanan",
+    href: "",
     subLinks: [
       { name: "Standard Palayanan", href: "/pelayanan/publik" },
       { name: "Module", href: "/pelayanan/module" },
@@ -98,7 +98,7 @@ export const navLinks: NavLink[] = [
   // { name: "Berita", href: "/berita" },
   {
     name: "Informasi",
-    href: "/#",
+    href: "/informasi/kontak",
     subLinks: [
       { name: "Kontak", href: "/informasi/kontak" },
       {
