@@ -126,27 +126,27 @@ export const services = [
 export const testimonials = [
   {
     id: 1,
-    date: "September, 2024",
+    date: "Januari, 2025",
     content:
-      "Pelayanan oke, terdapat rawat inap, pelayanan laboratorium ramah cepat dan tanggap, Good🫶🏻🫶🏻",
-    author: "Sonnia Syanubari",
+      "Salut dengan pelayanan balkesmas ambarawa, dari mulai pendaftaran dan masuk ke ruang dokter dilayani dengan sigap,sabar dan lumayan ramah. Cocok berobat disini karna memang peralatan medis untuk keluhan kesehatan yang berhubungan dengan paru2 lengkap, mulai dari xRay,uji lab dll. Fasilitas ibadah di mushola mungkin bisa ditambah sajadah/mukena karna masih terbatas.",
+    author: "Rostie",
     source: "Google Review",
     rating: 5,
   },
   {
     id: 2,
-    date: "Agustus, 2024",
+    date: "Oktober, 2022",
     content:
-      "Pelayanannya cepat dan profesional👏👏. Tempat nyaman, bersih, dan harga terjangkau.",
-    author: "Muhammad Ifan",
+      "Tadi pagi jam set. 8 sampai lokasi langsung tanya satpam dan diarahkan ke loket pendaftaran. Tidak terlalu lama untuk mengurus administrasi hanya yg lama itu di bagian spesialis nya. Skrining awal dulu untuk penimbangan BB dan ditanya keluhannya apa. Lalu masih menunggu dipanggil dokter spesialis nya. Setelah dipanggil diarahkan ke bagian kasir untuk pembayaran tes mantoux dan lgsg ke IGD. Langsung ditangani. Lepas itu ke apotek anak untuk mengambil vitamin. Cukup lama karena petugas apoteknya melayani obat untuk lansia dan anak. Sepertinya tidak ada kantin. Disarankan membawa snack apabila membawa balita. Jam 1 siang sy baru selesai😥. Untuk pelayananannya bagus. Tempatnya bersih. Toiletnya pun bersih. Satpam, petugas medis, apoteker, loket pembayaran dan pendaftaran komunikatif dan ramah.",
+    author: "Rosa Annisa",
     source: "",
     rating: 4,
   },
   {
     id: 3,
-    date: "Februari, 2024",
+    date: "Desember, 2023",
     content:
-      "Pelayanan staf sangat baik, ramah dan penuh senyum. Terus konsisten menyehatkan warga ambarawa.",
+      "Balai Kesehatan Masyarakat Wilayah Ambarawa sangat baik pelayanannya Satpam, Pendaftaran, Kasir, Lab dan Radiologi, Dokter dan Perawat sangat ramah dan sangat baik, luar biasa penuh senyum dan pelayanan memuaskan, maju terus balkesmas ambarawa semoga bisa konsisten menyehatkan seluruh warga ambarawa",
     author: "Rosyad Nurdien",
     source: "Google Review",
     rating: 5,
