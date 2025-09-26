@@ -90,7 +90,7 @@ export default function Footer() {
             </p>
             <div className="flex space-x-4">
               <a
-                href="https://www.facebook.com/Balkesmas"
+                href="https://web.facebook.com/Balkesmas/?_rdc=1&_rdr#"
                 className="text-slate-300 hover:text-white transition-colors"
               >
                 <IconBrandFacebook size={24} />
@@ -102,7 +102,7 @@ export default function Footer() {
                 <IconBrandTwitter size={24} />
               </a>
               <a
-                href="instagram.com/balkesmas_ambarawa"
+                href="https://www.instagram.com/balkesmas_ambarawa/"
                 className="text-slate-300 hover:text-white transition-colors"
               >
                 <IconBrandInstagram size={24} />
