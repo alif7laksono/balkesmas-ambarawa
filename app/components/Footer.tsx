@@ -57,10 +57,10 @@ export default function Footer() {
   ];
 
   const instagramPosts = [
-    { id: 1, image: "/images/profil/gedung1.jpg", url: "#" },
-    { id: 2, image: "/images/profil/gedung2.jpg", url: "#" },
-    { id: 3, image: "/images/profil/gedung3.jpg", url: "#" },
-    { id: 4, image: "/images/profil/gedung4.jpg", url: "#" },
+    { id: 1, image: "/images/profil/gedung1.jpg" },
+    { id: 2, image: "/images/profil/gedung2.jpg" },
+    { id: 3, image: "/images/profil/gedung3.jpg" },
+    { id: 4, image: "/images/profil/gedung4.jpg" },
   ];
 
   return (
@@ -175,7 +175,6 @@ export default function Footer() {
               {instagramPosts.map((post) => (
                 <motion.a
                   key={post.id}
-                  href={post.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   variants={itemVariants}
@@ -206,17 +205,20 @@ export default function Footer() {
           >
             <IconMapPin className="text-gray-500 mr-3 flex-shrink-0" />
             <span>
-              Jl. Dr. Cipto No.102, Kepatihan, Kranggan, Kec. Ambarawa,
+              Jl. Dr. Cipto No.112, Kepatihan, Kranggan, Kec. Ambarawa,
               Kabupaten Semarang, Jawa Tengah 50613
             </span>
           </motion.div>
-          <motion.div
-            className="flex items-center text-slate-300"
+          <motion.a
+            href="https://wa.me/628112891084"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center text-slate-300 hover:text-green-500 transition-colors"
             variants={itemVariants}
           >
             <IconPhone className="text-gray-500 mr-3 flex-shrink-0" />
             <span>+62 811-2891-084</span>
-          </motion.div>
+          </motion.a>
         </motion.div>
       </div>
 
