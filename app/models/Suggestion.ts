@@ -1,6 +1,6 @@
 // app/models/Suggestion.ts
 
-import mongoose, { Schema, model, models } from "mongoose";
+import { Schema, model, models } from "mongoose";
 
 const SuggestionSchema = new Schema(
   {
