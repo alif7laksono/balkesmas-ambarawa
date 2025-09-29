@@ -9,7 +9,7 @@ export default async function SuggestionsPage() {
   const session = await getServerSession(authOptions);
 
   if (!session) {
-    redirect("/login"); // redirect kalau belum login
+    redirect("/login");
   }
 
   return (
