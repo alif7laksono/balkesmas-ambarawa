@@ -8,6 +8,12 @@ import { cn } from "@/lib/utils";
 import { navLinks } from "../data/data";
 import { Button } from "@/components/ui/button";
 import { IconChevronRight, IconPhone, IconFileText } from "@tabler/icons-react";
+import {
+  containerVariants,
+  dropdownItemVariants,
+  dropdownVariants,
+  itemVariants,
+} from "./Animations";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -29,58 +35,6 @@ export default function Navbar() {
 
   const toggleNestedSubmenu = (name: string) => {
     setActiveNestedSubmenu(activeNestedSubmenu === name ? null : name);
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: -20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.3,
-      },
-    },
-  };
-
-  const dropdownVariants = {
-    hidden: {
-      opacity: 0,
-      height: 0,
-      transition: {
-        duration: 0.2,
-      },
-    },
-    visible: {
-      opacity: 1,
-      height: "auto",
-      transition: {
-        duration: 0.2,
-        staggerChildren: 0.05,
-        when: "beforeChildren",
-      },
-    },
-  };
-
-  const dropdownItemVariants = {
-    hidden: { x: -10, opacity: 0 },
-    visible: {
-      x: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.15,
-      },
-    },
   };
 
   const renderNavLinks = (links: typeof navLinks, isMobile = false) => {
@@ -332,7 +286,7 @@ export default function Navbar() {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden pr-3">
+          <div className="md:hidden">
             <Button
               variant="ghost"
               size="icon"
@@ -371,12 +325,21 @@ export default function Navbar() {
               </motion.ul>
             </motion.div>
 
-            <div
+            <motion.div
               key="contacts"
               className="px-4 py-4 flex flex-col gap-4 border-t border-slate-200"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
             >
               {/* Hubungi Kami */}
-              <div className="flex items-start gap-3 group cursor-pointer hover:bg-red-50 p-2 rounded transition-colors">
+              <motion.div
+                variants={itemVariants}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-start gap-3 group cursor-pointer hover:bg-red-50 p-2 rounded transition-colors"
+              >
                 <IconFileText size={20} className="text-red-500 mt-1" />
                 <div className="flex flex-col">
                   <span className="text-sm font-semibold text-slate-700">
@@ -391,10 +354,15 @@ export default function Navbar() {
                     Pendaftaran
                   </a>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Whatsapp */}
-              <div className="flex items-start gap-3 group cursor-pointer hover:bg-blue-50 p-2 rounded transition-colors">
+              <motion.div
+                variants={itemVariants}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-start gap-3 group cursor-pointer hover:bg-blue-50 p-2 rounded transition-colors"
+              >
                 <IconPhone size={20} className="mt-1 text-green-600" />
                 <div className="flex flex-col">
                   <span className="text-sm font-semibold text-slate-700">
@@ -409,8 +377,8 @@ export default function Navbar() {
                     081-1289-1084
                   </a>
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </>
         )}
       </AnimatePresence>
