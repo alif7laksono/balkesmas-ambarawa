@@ -100,7 +100,7 @@ export const navLinks: NavLink[] = [
     name: "Informasi",
     href: "/informasi/kontak",
     subLinks: [
-      { name: "Kontak", href: "/informasi/kontak" },
+      { name: "Kontak", href: "/contact" },
       {
         name: "Jadwal Praktek Dokter",
         href: "/informasi/jadwal-praktek-dokter",
