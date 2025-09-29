@@ -5,16 +5,11 @@ import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
+import { fadeIn } from "@/app/animations/animations";
 
-// Mock images - replace with your actual images
 const historyImages = [
   "/images/profil/sejarah4.png",
 ];
-
-const fadeIn = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
 
 export default function Sejarah() {
   return (
