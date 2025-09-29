@@ -1,5 +1,4 @@
 // app/contact/ContactForm.tsx
-
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -7,6 +6,20 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { fadeIn } from "../animations/animations";
+import { z } from "zod";
+
+// 🔹 Schema Zod
+const contactSchema = z.object({
+  name: z
+    .string()
+    .min(2, "Nama wajib diisi")
+    .regex(/^[A-Za-z\s]+$/, "Nama hanya boleh huruf"),
+  phone: z
+    .string()
+    .min(8, "Nomor terlalu pendek")
+    .regex(/^[0-9]+$/, "No. Telp hanya boleh angka"),
+  message: z.string().min(1, "Pesan wajib diisi"),
+});
 
 export default function ContactForm() {
   const [form, setForm] = useState({ name: "", phone: "", message: "" });
@@ -15,9 +28,14 @@ export default function ContactForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!form.name || !form.phone || !form.message) {
-      toast("Form tidak lengkap ⚠️", {
-        description: "Mohon isi semua field sebelum mengirim.",
+    // 🔹 Validasi pakai Zod
+    const result = contactSchema.safeParse(form);
+
+    if (!result.success) {
+      result.error.issues.forEach((err) => {
+        toast("Validasi gagal ⚠️", {
+          description: err.message,
+        });
       });
       return;
     }
@@ -82,7 +100,12 @@ export default function ContactForm() {
             type="text"
             placeholder="Masukkan Nama"
             value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (/^[A-Za-z\s]*$/.test(value)) {
+                setForm({ ...form, name: value });
+              }
+            }}
             className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#dc3545] outline-none"
             disabled={loading}
           />
@@ -96,7 +119,12 @@ export default function ContactForm() {
             type="text"
             placeholder="Masukkan No. Telp / Whatsapp"
             value={form.phone}
-            onChange={(e) => setForm({ ...form, phone: e.target.value })}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (/^[0-9]*$/.test(value)) {
+                setForm({ ...form, phone: value });
+              }
+            }}
             className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#dc3545] outline-none"
             disabled={loading}
           />

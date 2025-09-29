@@ -7,6 +7,8 @@ import ContactForm from "./ContactForm";
 import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Balai Kesehatan Masyarakat Wilayah Ambarawa - Kontak dan Saran",
+  description:
+    "Hubungi Balkesmas Ambarawa untuk pertanyaan, kritik, dan saran melalui formulir kontak atau informasi yang tersedia.",
 };
 
 export default function ContactPage() {
