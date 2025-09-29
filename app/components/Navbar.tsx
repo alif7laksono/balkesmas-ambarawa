@@ -388,7 +388,7 @@ export default function Navbar() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    0298-591084
+                    Pendaftaran
                   </a>
                 </div>
               </div>

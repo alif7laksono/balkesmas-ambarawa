@@ -56,7 +56,7 @@ export default function Hero() {
           <motion.div className="flex flex-wrap gap-4" variants={itemVariants}>
             <Button
               size={isMobile ? "default" : "lg"}
-              className="bg-[#dc3545] hover:bg-red-700 text-white cursor-pointer"
+              className="bg-gray-950 hover:bg-gray-800 text-white cursor-pointer"
             >
               PENDAFTARAN
             </Button>
