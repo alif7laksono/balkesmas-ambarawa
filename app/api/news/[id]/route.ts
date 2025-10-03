@@ -1,5 +1,7 @@
 // app/api/news/[id]/route.ts
 
+// app/api/news/[id]/route.ts
+
 import { NextResponse } from "next/server";
 import { connectDB } from "@/app/lib/mongodb";
 import News from "@/app/models/News";
@@ -8,19 +10,20 @@ import mongoose from "mongoose";
 // GET detail berita
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     await connectDB();
 
-    if (!mongoose.Types.ObjectId.isValid(params.id)) {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
         { success: false, message: "ID berita tidak valid" },
         { status: 400 }
       );
     }
 
-    const news = await News.findById(params.id).populate(
+    const news = await News.findById(id).populate(
       "category",
       "name description"
     );
@@ -43,12 +46,13 @@ export async function GET(
 // PUT update berita
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     await connectDB();
 
-    if (!mongoose.Types.ObjectId.isValid(params.id)) {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
         { success: false, message: "ID berita tidak valid" },
         { status: 400 }
@@ -58,7 +62,7 @@ export async function PUT(
     const body = await req.json();
 
     const updatedNews = await News.findByIdAndUpdate(
-      params.id,
+      id,
       { ...body, updatedAt: new Date() },
       { new: true }
     );
@@ -83,19 +87,20 @@ export async function PUT(
 // DELETE hapus berita
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     await connectDB();
 
-    if (!mongoose.Types.ObjectId.isValid(params.id)) {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
         { success: false, message: "ID berita tidak valid" },
         { status: 400 }
       );
     }
 
-    const deletedNews = await News.findByIdAndDelete(params.id);
+    const deletedNews = await News.findByIdAndDelete(id);
 
     if (!deletedNews) {
       return NextResponse.json(

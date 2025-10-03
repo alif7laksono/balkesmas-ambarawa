@@ -1,18 +1,17 @@
 // app/api/categories/[id]/route.ts
-
 import { NextResponse } from "next/server";
 import { connectDB } from "@/app/lib/mongodb";
 import Category from "@/app/models/Category";
 
-interface RouteParams {
-  params: { id: string };
-}
-
 // ✅ GET category by id
-export async function GET(req: Request, { params }: RouteParams) {
+export async function GET(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params;
     await connectDB();
-    const category = await Category.findById(params.id);
+    const category = await Category.findById(id);
 
     if (!category) {
       return NextResponse.json(
@@ -30,13 +29,17 @@ export async function GET(req: Request, { params }: RouteParams) {
 }
 
 // ✅ PUT update category
-export async function PUT(req: Request, { params }: RouteParams) {
+export async function PUT(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params;
     await connectDB();
     const body = await req.json();
 
     const category = await Category.findByIdAndUpdate(
-      params.id,
+      id,
       { $set: body },
       { new: true, runValidators: true }
     );
@@ -57,10 +60,14 @@ export async function PUT(req: Request, { params }: RouteParams) {
 }
 
 // ✅ DELETE category
-export async function DELETE(req: Request, { params }: RouteParams) {
+export async function DELETE(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params;
     await connectDB();
-    const category = await Category.findByIdAndDelete(params.id);
+    const category = await Category.findByIdAndDelete(id);
 
     if (!category) {
       return NextResponse.json(
