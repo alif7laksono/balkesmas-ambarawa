@@ -29,12 +29,16 @@ const newsSchema = z.object({
 type NewsFormData = z.infer<typeof newsSchema>;
 
 export default function TambahBerita() {
-  const [form, setForm] = useState({ title: "", content: "", category: "" });
+  const [form, setForm] = useState<Omit<NewsFormData, "image">>({
+    title: "",
+    content: "",
+    category: "",
+  });
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [categories, setCategories] = useState<
-    { _id: string; name: string }[]
-  >([]);
+  const [categories, setCategories] = useState<{ _id: string; name: string }[]>(
+    []
+  );
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 

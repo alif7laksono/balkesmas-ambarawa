@@ -7,19 +7,19 @@ import News from "@/app/models/News";
 import EditBeritaClient from "./EditBeritaClient";
 
 interface EditBeritaPageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
 export default async function EditBeritaPage({ params }: EditBeritaPageProps) {
+  const { id } = await params; // ✅ harus di-await
+
   const session = await getServerSession(authOptions);
   if (!session) {
     redirect("/login");
   }
 
   await connectDB();
-  const news = await News.findById(params.id).populate("category");
+  const news = await News.findById(id).populate("category");
 
   if (!news) {
     return <div className="p-6 text-red-600">Berita tidak ditemukan.</div>;
