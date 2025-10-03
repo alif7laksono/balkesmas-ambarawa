@@ -2,7 +2,7 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,9 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const callbackUrl = searchParams.get("callbackUrl") || "/admin";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +31,7 @@ export default function LoginForm() {
         description: "Anda akan diarahkan ke halaman admin",
       });
       setTimeout(() => {
-        router.push("/admin/suggestions");
+        router.push(callbackUrl);
       }, 1500);
     } else {
       toast.error("Login gagal ❌", {
@@ -37,7 +40,6 @@ export default function LoginForm() {
       setLoading(false);
     }
   };
-
   return (
     <form
       onSubmit={handleSubmit}
