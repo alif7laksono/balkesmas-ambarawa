@@ -4,11 +4,12 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/app/lib/mongodb";
 import Category from "@/app/models/Category";
 
-// GET category by id
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+interface RouteParams {
+  params: { id: string };
+}
+
+// ✅ GET category by id
+export async function GET(req: Request, { params }: RouteParams) {
   try {
     await connectDB();
     const category = await Category.findById(params.id);
@@ -28,11 +29,8 @@ export async function GET(
   }
 }
 
-// PUT update category
-export async function PUT(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+// ✅ PUT update category
+export async function PUT(req: Request, { params }: RouteParams) {
   try {
     await connectDB();
     const body = await req.json();
@@ -58,11 +56,8 @@ export async function PUT(
   }
 }
 
-// DELETE category
-export async function DELETE(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+// ✅ DELETE category
+export async function DELETE(req: Request, { params }: RouteParams) {
   try {
     await connectDB();
     const category = await Category.findByIdAndDelete(params.id);
