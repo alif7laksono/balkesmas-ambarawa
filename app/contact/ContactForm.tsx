@@ -79,18 +79,11 @@ export default function ContactForm() {
       className="bg-gray-50 p-8 rounded-2xl shadow-lg"
     >
       <div className="mb-8 text-gray-700 leading-relaxed">
-        <p className="text-lg font-medium mb-2">
-          Halaman Kritik & Saran Balkesmas Ambarawa
-        </p>
         <p>
           Kami sangat menghargai setiap masukan dari masyarakat. Kritik dan
           saran yang Anda berikan akan membantu kami meningkatkan kualitas
           pelayanan serta memberikan pengalaman yang lebih baik bagi seluruh
           pasien dan pengunjung.
-        </p>
-        <p className="mt-2">
-          Silakan isi formulir di bawah ini dengan jujur dan jelas. Setiap pesan
-          Anda akan menjadi bahan evaluasi penting bagi kami.
         </p>
       </div>
 

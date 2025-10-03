@@ -1,4 +1,4 @@
-import { NavLink } from "./nav";
+import { NavLink } from "../utils/nav";
 
 export const navLinks: NavLink[] = [
   { name: "Home", href: "/" },
