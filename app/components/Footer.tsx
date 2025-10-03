@@ -11,36 +11,15 @@ import {
   IconPhone,
   IconSquareArrowUp,
 } from "@tabler/icons-react";
+import { footerVariants, itemVariants } from "../animations/animations";
 
 export default function Footer() {
-  const footerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.3,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.5,
-      },
-    },
-  };
-
   const mainMenus = [
     { name: "Beranda", href: "/" },
     { name: "Profil", href: "/profil/tentang-kami" },
     { name: "Layanan", href: "/informasi/jadwal-praktek-dokter" },
-    // { name: "Artikel", href: "/artikel" },
-    { name: "Kontak", href: "/informasi/kontak" },
+    // { name: "Berita", href: "/berita" },
+    { name: "Kontak", href: "/contact" },
   ];
 
   const visitLinks = [
@@ -87,6 +66,9 @@ export default function Footer() {
             <p className="text-slate-300 mb-6">
               Menjadi Institusi Penggerak Kemandirian Masyarakat dalam
               Mewujudkan Kesehatan Paripurna di Wilayah Kerja
+            </p>
+            <p className="text-slate-400 font-semibold uppercase tracking-wide mb-3">
+              Follow Us
             </p>
             <div className="flex space-x-4">
               <a

@@ -2,7 +2,6 @@
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { fadeIn } from "../animations/animations";
@@ -79,14 +78,20 @@ export default function ContactForm() {
       transition={{ duration: 0.6 }}
       className="bg-gray-50 p-8 rounded-2xl shadow-lg"
     >
-      <div className="mb-8">
-        <Image
-          src="/images/profil/gedung1.jpg"
-          alt="Kontak"
-          width={1200}
-          height={400}
-          className="rounded-xl object-cover"
-        />
+      <div className="mb-8 text-gray-700 leading-relaxed">
+        <p className="text-lg font-medium mb-2">
+          Halaman Kritik & Saran Balkesmas Ambarawa
+        </p>
+        <p>
+          Kami sangat menghargai setiap masukan dari masyarakat. Kritik dan
+          saran yang Anda berikan akan membantu kami meningkatkan kualitas
+          pelayanan serta memberikan pengalaman yang lebih baik bagi seluruh
+          pasien dan pengunjung.
+        </p>
+        <p className="mt-2">
+          Silakan isi formulir di bawah ini dengan jujur dan jelas. Setiap pesan
+          Anda akan menjadi bahan evaluasi penting bagi kami.
+        </p>
       </div>
 
       <h2 className="text-2xl font-semibold mb-6 text-gray-800">
@@ -106,7 +111,7 @@ export default function ContactForm() {
                 setForm({ ...form, name: value });
               }
             }}
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#dc3545] outline-none"
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#000] outline-none"
             disabled={loading}
           />
         </div>
@@ -125,7 +130,7 @@ export default function ContactForm() {
                 setForm({ ...form, phone: value });
               }
             }}
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#dc3545] outline-none"
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#000] outline-none"
             disabled={loading}
           />
         </div>
@@ -137,7 +142,7 @@ export default function ContactForm() {
             placeholder="Masukkan Pesan"
             value={form.message}
             onChange={(e) => setForm({ ...form, message: e.target.value })}
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#dc3545] outline-none"
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#000] outline-none"
             disabled={loading}
           />
         </div>

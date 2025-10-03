@@ -7,6 +7,11 @@ export const metadata: Metadata = {
   title: "Baslkesmas Ambarawa - Balai Kesehatan Masyarakat Wilayah Ambarawa",
   description:
     "Menjadi Institusi Penggerak Kemandirian Masyarakat dalam Mewujudkan Kesehatan Paripurna di Wilayah Kerja",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.png",
+  },
 };
 
 export default function RootLayout({
