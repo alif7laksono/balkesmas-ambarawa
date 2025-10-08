@@ -1,6 +1,7 @@
 // app/models/News.ts
 
 import mongoose, { Schema, Document, models } from "mongoose";
+import Category from "@/app/models/Category";
 
 export interface INews extends Document {
   title: string;
@@ -69,7 +70,7 @@ const NewsSchema: Schema = new Schema(
 
     category: {
       type: Schema.Types.ObjectId,
-      ref: "Category", // Sekarang Category sudah terdaftar
+      ref: "Category", 
       required: true,
     },
   },
