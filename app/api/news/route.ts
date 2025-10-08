@@ -6,6 +6,7 @@ import News from "@/app/models/News";
 import { writeFile } from "fs/promises";
 import path from "path";
 import { validateFile } from "@/app/lib/fileUtils";
+import Category from "@/app/models/Category";
 
 interface NewsQuery {
   title?: { $regex: string; $options: string };

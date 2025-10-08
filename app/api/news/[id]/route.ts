@@ -7,6 +7,7 @@ import { writeFile } from "fs/promises";
 import path from "path";
 import { deleteFile } from "@/app/lib/fileUtils";
 import { createExcerpt } from "@/app/lib/excerptUtils";
+import Category from "@/app/models/Category";
 
 interface UpdateNewsData {
   title: string;
