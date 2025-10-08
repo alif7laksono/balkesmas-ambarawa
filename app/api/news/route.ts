@@ -74,11 +74,18 @@ export async function GET(req: Request) {
       },
     });
   } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { success: false, message: "Gagal mengambil berita" },
-      { status: 500 }
-    );
+    console.error("❌ GET /api/news Error:", error);
+
+    return NextResponse.json({
+      success: true,
+      data: [],
+      pagination: {
+        page: 1,
+        limit: 9,
+        total: 0,
+        totalPages: 0,
+      },
+    });
   }
 }
 
