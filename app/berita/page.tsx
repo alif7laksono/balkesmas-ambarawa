@@ -25,6 +25,8 @@ async function getCategories() {
   return res.json();
 }
 
+console.log("redeploy after added env");
+
 export default async function NewsPage() {
   const { data } = await getNews();
   const categories = await getCategories();
