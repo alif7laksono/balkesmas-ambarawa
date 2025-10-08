@@ -37,7 +37,7 @@ export default function LogoutButton() {
           <AlertDialogCancel>Batal</AlertDialogCancel>
           <AlertDialogAction
             className="bg-red-600 hover:bg-red-700"
-            onClick={() => signOut({ callbackUrl: "/login" })}
+            onClick={() => signOut({ callbackUrl: "/admin/login" })}
           >
             Ya, Logout
           </AlertDialogAction>

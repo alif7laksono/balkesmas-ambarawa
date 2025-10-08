@@ -6,24 +6,19 @@ import {
   Roboto,
   Open_Sans,
   Cinzel,
-  Italiana,
-  Tangerine,
-  Syne,
   Albert_Sans,
   Exo,
-  Orbitron,
   Raleway,
   Cormorant_Garamond,
   Lora,
   Playfair_Display,
-  Dancing_Script,
   Ibarra_Real_Nova,
   Inter,
 } from "next/font/google";
 
 export const inter = Inter({
-  subsets: ["cyrillic", ]
-})
+  subsets: ["cyrillic"],
+});
 
 export const bodoni = Bodoni_Moda({
   subsets: ["latin"],
@@ -72,34 +67,10 @@ export const openSans = Open_Sans({
   display: "swap",
 });
 
-export const italiana = Italiana({
-  subsets: ["latin"],
-  weight: ["400"],
-  style: ["normal"],
-});
-
-export const tangerine = Tangerine({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  style: ["normal"],
-});
-
-export const syne = Syne({
-  subsets: ["greek", "latin", "latin-ext"],
-  weight: ["400", "500", "600", "700", "800"],
-  style: ["normal"],
-});
-
 export const albertsans = Albert_Sans({
   subsets: ["latin", "latin-ext"],
   weight: ["400", "600", "800"],
   style: ["italic", "normal"],
-});
-
-export const orbitron = Orbitron({
-  subsets: ["latin"],
-  weight: ["400", "600", "800"],
-  style: ["normal"],
 });
 
 export const exo = Exo({
@@ -126,12 +97,6 @@ export const playfair_display = Playfair_Display({
   style: ["italic", "normal"],
 });
 
-export const dancing_script = Dancing_Script({
-  subsets: ["latin", "latin-ext", "vietnamese"],
-  weight: ["400", "500", "600", "700"],
-  style: ["normal"],
-});
-
 export const ibarra_real_nova = Ibarra_Real_Nova({
   subsets: ["latin", "latin-ext"],
   weight: ["400", "500", "600", "700"],
@@ -145,14 +110,10 @@ export const fonts = {
   lora: lora.className,
   roboto: roboto.className,
   openSans: openSans.className,
-  italiana: italiana.className,
-  tangerine: tangerine.className,
-  syne: syne.className,
   albertsans: albertsans.className,
   exo: exo.className,
   raleway: raleway.className,
   cormorant_garamond: cormorant_garamond.className,
   playfair_display: playfair_display.className,
-  dancing_script: dancing_script.className,
   ibarra_real_nova: ibarra_real_nova.className,
 };

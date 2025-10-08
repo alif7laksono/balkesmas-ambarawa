@@ -1,4 +1,5 @@
 // app/models/News.ts
+
 import mongoose, { Schema, Document, models } from "mongoose";
 
 export interface INews extends Document {
@@ -6,8 +7,13 @@ export interface INews extends Document {
   content: string;
   excerpt: string;
   image: string;
+  slug: string;
+  status: "draft" | "published" | "archived";
+  metaTitle?: string;
+  metaDescription?: string;
   date: Date;
-  category: mongoose.Types.ObjectId; // relasi ke Category
+  eventDate: Date;
+  category: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -26,19 +32,44 @@ const NewsSchema: Schema = new Schema(
     excerpt: {
       type: String,
       required: true,
-      maxlength: 300,
+      maxlength: 160,
     },
     image: {
       type: String,
       required: true,
     },
+    slug: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    status: {
+      type: String,
+      enum: ["draft", "published", "archived"],
+      default: "draft",
+    },
+    metaTitle: {
+      type: String,
+      maxlength: 60,
+    },
+    metaDescription: {
+      type: String,
+      maxlength: 160,
+    },
+
     date: {
       type: Date,
       default: Date.now,
     },
+    eventDate: {
+      type: Date,
+      required: true,
+      default: Date.now,
+    },
+
     category: {
       type: Schema.Types.ObjectId,
-      ref: "Category", // relasi ke Category
+      ref: "Category",
       required: true,
     },
   },
@@ -46,5 +77,4 @@ const NewsSchema: Schema = new Schema(
 );
 
 const News = models.News || mongoose.model<INews>("News", NewsSchema);
-
 export default News;

@@ -1,56 +1,47 @@
-// app/admin/berita/edit/[id]/EditBeritaClient.tsx
+// app/admin/berita/tambah/TambahBeritaClient.tsx
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useEditor, EditorContent, Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import TextAlign from "@tiptap/extension-text-align";
-import Underline from "@tiptap/extension-underline";
 import Image from "next/image";
+import TextAlign from "@tiptap/extension-text-align";
 import { useSlugGenerator } from "@/app/hooks/useSlugGenerator";
 
-type NewsType = {
+interface Category {
   _id: string;
-  title: string;
-  content: string;
-  category: { _id: string; name: string };
-  image: string;
-  slug: string;
-  status: string;
-  eventDate: Date;
-};
+  name: string;
+}
 
 interface MenuBarProps {
   editor: Editor | null;
 }
 
-// ✅ COMPLETE Toolbar Component untuk TipTap
+// Toolbar Component untuk TipTap
 const MenuBar = ({ editor }: MenuBarProps) => {
-  if (!editor) {
-    console.log("❌ Editor not available in MenuBar");
-    return null;
-  }
-
-  console.log("🎛️ MenuBar rendered, editor:", !!editor);
-
-  // Type guard untuk heading level
-  const isValidHeadingLevel = (
-    level: number
-  ): level is 1 | 2 | 3 | 4 | 5 | 6 => {
-    return [1, 2, 3, 4, 5, 6].includes(level);
-  };
+  if (!editor) return null;
 
   return (
     <div className="border border-gray-300 rounded-t-lg p-2 flex flex-wrap gap-1 bg-gray-50">
-      {/* Headings */}
       <select
         value={editor.getAttributes("heading").level || ""}
         onChange={(e) => {
           const level = parseInt(e.target.value);
-          console.log("🎯 Heading selected:", level);
-          if (level && isValidHeadingLevel(level)) {
-            editor.chain().focus().toggleHeading({ level }).run();
+          // ✅ Type assertion ke Level type yang valid
+          if (
+            level === 1 ||
+            level === 2 ||
+            level === 3 ||
+            level === 4 ||
+            level === 5 ||
+            level === 6
+          ) {
+            editor
+              .chain()
+              .focus()
+              .toggleHeading({ level: level as 1 | 2 | 3 | 4 | 5 | 6 })
+              .run();
           } else {
             editor.chain().focus().setParagraph().run();
           }
@@ -58,14 +49,13 @@ const MenuBar = ({ editor }: MenuBarProps) => {
         className="p-1 border rounded text-sm"
       >
         <option value="">Paragraph</option>
-        <option value="1">Heading 1</option>
-        <option value="2">Heading 2</option>
-        <option value="3">Heading 3</option>
-        <option value="4">Heading 4</option>
-        <option value="5">Heading 5</option>
-        <option value="6">Heading 6</option>
+        <option value="1">H1</option>
+        <option value="2">H2</option>
+        <option value="3">H3</option>
+        <option value="4">H4</option>
+        <option value="5">H5</option>
+        <option value="6">H6</option>
       </select>
-
       {/* Text Formatting */}
       <button
         type="button"
@@ -77,7 +67,6 @@ const MenuBar = ({ editor }: MenuBarProps) => {
       >
         <strong>B</strong>
       </button>
-
       <button
         type="button"
         onClick={() => editor.chain().focus().toggleItalic().run()}
@@ -88,7 +77,6 @@ const MenuBar = ({ editor }: MenuBarProps) => {
       >
         <em>I</em>
       </button>
-
       <button
         type="button"
         onClick={() => editor.chain().focus().toggleUnderline().run()}
@@ -99,7 +87,6 @@ const MenuBar = ({ editor }: MenuBarProps) => {
       >
         <u>U</u>
       </button>
-
       {/* Lists */}
       <button
         type="button"
@@ -111,7 +98,6 @@ const MenuBar = ({ editor }: MenuBarProps) => {
       >
         • List
       </button>
-
       <button
         type="button"
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
@@ -122,8 +108,7 @@ const MenuBar = ({ editor }: MenuBarProps) => {
       >
         1. List
       </button>
-
-      {/* Text Alignment */}
+      {/* Alignment */}
       <button
         type="button"
         onClick={() => editor.chain().focus().setTextAlign("left").run()}
@@ -136,7 +121,6 @@ const MenuBar = ({ editor }: MenuBarProps) => {
       >
         ⬅
       </button>
-
       <button
         type="button"
         onClick={() => editor.chain().focus().setTextAlign("center").run()}
@@ -149,7 +133,6 @@ const MenuBar = ({ editor }: MenuBarProps) => {
       >
         ↔
       </button>
-
       <button
         type="button"
         onClick={() => editor.chain().focus().setTextAlign("right").run()}
@@ -162,81 +145,33 @@ const MenuBar = ({ editor }: MenuBarProps) => {
       >
         ➡
       </button>
-
-      {/* Text Alignment - Justify */}
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().setTextAlign("justify").run()}
-        className={`p-2 rounded ${
-          editor.isActive({ textAlign: "justify" })
-            ? "bg-gray-300"
-            : "hover:bg-gray-200"
-        }`}
-        title="Justify"
-      >
-        ☰
-      </button>
-
-      {/* Indentation */}
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().setHardBreak().run()}
-        className="p-2 rounded hover:bg-gray-200"
-        title="Line Break"
-      >
-        ↵
-      </button>
-
-      {/* Clear Formatting */}
-      <button
-        type="button"
-        onClick={() =>
-          editor.chain().focus().clearNodes().unsetAllMarks().run()
-        }
-        className="p-2 rounded hover:bg-gray-200 text-red-600"
-        title="Clear Formatting"
-      >
-        🗑️
-      </button>
     </div>
   );
 };
 
-export default function EditBeritaClient({ news }: { news: NewsType }) {
+export default function TambahBeritaClient() {
+  const [isClient, setIsClient] = useState(false);
   const [form, setForm] = useState({
-    title: news.title,
-    content: news.content,
-    category: news.category?._id || "",
-    status: news.status || "draft",
-    eventDate: news.eventDate
-      ? new Date(news.eventDate).toISOString().split("T")[0]
-      : new Date().toISOString().split("T")[0],
+    title: "",
+    content: "",
+    category: "",
+    status: "draft" as "draft" | "published",
+    eventDate: new Date().toISOString().split("T")[0],
   });
   const [image, setImage] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(news.image);
-  const [categories, setCategories] = useState<{ _id: string; name: string }[]>(
-    []
-  );
+  const [preview, setPreview] = useState<string | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // ✅ Custom hook untuk slug generation
-  const { slug, setSlug, isManualEdit } = useSlugGenerator(
-    form.title,
-    news.slug
-  );
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTitle = e.target.value;
-    setForm((prev) => ({ ...prev, title: newTitle }));
-  };
-
-  // ✅ COMPLETE TipTap Editor dengan semua extensions
-  const [isClient, setIsClient] = useState(false);
+  // TipTap Editor
   const editor = useEditor({
     extensions: [
       StarterKit,
-      Underline, // ✅ Tambah underline extension
       TextAlign.configure({
         types: ["heading", "paragraph"],
       }),
@@ -246,12 +181,11 @@ export default function EditBeritaClient({ news }: { news: NewsType }) {
       const html = editor.getHTML();
       setForm((prev) => ({ ...prev, content: html }));
     },
-    immediatelyRender: false,
+    immediatelyRender: false, // ✅ Important untuk avoid hydration
   });
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  // ✅ Custom hook untuk slug generation
+  const { slug, setSlug, isManualEdit } = useSlugGenerator(form.title);
 
   // ✅ Ambil daftar kategori
   useEffect(() => {
@@ -260,18 +194,6 @@ export default function EditBeritaClient({ news }: { news: NewsType }) {
       .then((data) => setCategories(data))
       .catch(() => toast.error("Gagal memuat kategori ⚠️"));
   }, []);
-
-  useEffect(() => {
-    if (editor) {
-      console.log("🚀 Editor mounted:", editor);
-      console.log("📋 Available commands:", {
-        canBold: editor.can().chain().focus().toggleBold().run(),
-        canItalic: editor.can().chain().focus().toggleItalic().run(),
-        canBulletList: editor.can().chain().focus().toggleBulletList().run(),
-        canOrderedList: editor.can().chain().focus().toggleOrderedList().run(),
-      });
-    }
-  }, [editor]);
 
   // ✅ Handle gambar
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -286,7 +208,7 @@ export default function EditBeritaClient({ news }: { news: NewsType }) {
       ];
       if (!allowedTypes.includes(file.type)) {
         toast.error(
-          "Format gambar tidak didukung. Gunakan JPEG, PNG, Avif, atau WebP ⚠️"
+          "Format gambar tidak didukung. Gunakan JPEG, PNG, WebP, atau AVIF ⚠️"
         );
         return;
       }
@@ -301,35 +223,42 @@ export default function EditBeritaClient({ news }: { news: NewsType }) {
     }
   };
 
-  // ✅ Submit update
+  // ✅ Handle submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+      if (!image) {
+        toast.error("Gambar berita wajib diupload ⚠️");
+        setLoading(false);
+        return;
+      }
+
       const formData = new FormData();
       formData.append("title", form.title);
       formData.append("content", form.content);
       formData.append("category", form.category);
       formData.append("status", form.status);
       formData.append("slug", slug);
-      formData.append("eventDate", form.eventDate);
+      formData.append("image", image);
 
-      if (image) {
-        formData.append("image", image);
-      }
-
-      const res = await fetch(`/api/news/${news._id}`, {
-        method: "PUT",
+      const res = await fetch("/api/news", {
+        method: "POST",
         body: formData,
       });
 
       const data = await res.json();
+
       if (data.success) {
-        toast.success("Berita berhasil diperbarui 🎉");
+        toast.success(
+          form.status === "published"
+            ? "Berita berhasil diterbitkan 🎉"
+            : "Berita disimpan sebagai draft 💾"
+        );
         router.push("/admin/berita");
       } else {
-        toast.error("Gagal mengupdate berita ⚠️", {
+        toast.error("Gagal membuat berita ⚠️", {
           description: data.message,
         });
       }
@@ -351,8 +280,9 @@ export default function EditBeritaClient({ news }: { news: NewsType }) {
         <input
           type="text"
           value={form.title}
-          onChange={handleTitleChange}
+          onChange={(e) => setForm({ ...form, title: e.target.value })}
           className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+          placeholder="Masukkan judul berita yang menarik..."
           required
         />
       </div>
@@ -400,6 +330,21 @@ export default function EditBeritaClient({ news }: { news: NewsType }) {
             ))}
           </select>
         </div>
+        <div>
+          <label className="block mb-2 font-medium text-gray-700">
+            Tanggal Kegiatan *
+          </label>
+          <input
+            type="date"
+            value={form.eventDate}
+            onChange={(e) => setForm({ ...form, eventDate: e.target.value })}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+            required
+          />
+          <p className="text-sm text-gray-500 mt-1">
+            Tanggal ketika kegiatan/acara dilaksanakan
+          </p>
+        </div>
 
         <div>
           <label className="block mb-2 font-medium text-gray-700">
@@ -407,38 +352,26 @@ export default function EditBeritaClient({ news }: { news: NewsType }) {
           </label>
           <select
             value={form.status}
-            onChange={(e) => setForm({ ...form, status: e.target.value })}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                status: e.target.value as "draft" | "published",
+              })
+            }
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
           >
             <option value="draft">Draft</option>
             <option value="published">Published</option>
-            <option value="archived">Archived</option>
           </select>
         </div>
       </div>
 
-      <div>
-        <label className="block mb-2 font-medium text-gray-700">
-          Tanggal Kegiatan *
-        </label>
-        <input
-          type="date"
-          value={form.eventDate}
-          onChange={(e) => setForm({ ...form, eventDate: e.target.value })}
-          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-          required
-        />
-        <p className="text-sm text-gray-500 mt-1">
-          Tanggal ketika kegiatan/acara dilaksanakan
-        </p>
-      </div>
-
-      {/* Rich Text Editor */}
-      <div>
-        <label className="block mb-2 font-medium text-gray-700">
-          Konten Berita *
-        </label>
-        {isClient && (
+      {/* Rich Text Editor dengan TipTap */}
+      {isClient && (
+        <div>
+          <label className="block mb-2 font-medium text-gray-700">
+            Konten Berita *
+          </label>
           <div className="border border-gray-300 rounded-lg overflow-hidden">
             <MenuBar editor={editor} />
             <EditorContent
@@ -446,43 +379,29 @@ export default function EditBeritaClient({ news }: { news: NewsType }) {
               className="min-h-[400px] p-4 prose max-w-none focus:outline-none"
             />
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Featured Image */}
       <div>
         <label className="block mb-2 font-medium text-gray-700">
-          Featured Image
+          Featured Image *
         </label>
         <input
           type="file"
           accept=".jpg,.jpeg,.png,.webp,.avif"
           onChange={handleImageChange}
           className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+          required
         />
         <p className="text-sm text-gray-500 mt-1">
-          Ukuran maksimal: 600KB. Kosongkan jika tidak ingin mengubah gambar.
+          Ukuran maksimal: 1MB. Format: JPG, PNG, WebP, AVIF
         </p>
 
-        {/* Current Image */}
-        {news.image && !preview && (
+        {/* Image Preview */}
+        {preview && (
           <div className="mt-4">
-            <p className="text-sm font-medium mb-2">Gambar saat ini:</p>
-            <div className="relative w-64 h-48 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden">
-              <Image
-                src={news.image}
-                alt="Current"
-                fill
-                className="object-cover"
-              />
-            </div>
-          </div>
-        )}
-
-        {/* New Image Preview */}
-        {preview && preview !== news.image && (
-          <div className="mt-4">
-            <p className="text-sm font-medium mb-2">Preview gambar baru:</p>
+            <p className="text-sm font-medium mb-2">Preview:</p>
             <div className="relative w-64 h-48 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden">
               <Image
                 src={preview}
@@ -509,7 +428,11 @@ export default function EditBeritaClient({ news }: { news: NewsType }) {
           disabled={loading}
           className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition"
         >
-          {loading ? "Menyimpan..." : "Update Berita"}
+          {loading
+            ? "Menyimpan..."
+            : form.status === "published"
+            ? "💫 Terbitkan Berita"
+            : "💾 Simpan Draft"}
         </button>
       </div>
     </form>

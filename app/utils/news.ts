@@ -3,7 +3,13 @@
 export interface News {
   _id: string;
   title: string;
-  content: string;
-  imageUrl: string;
+  excerpt: string;
+  image: string;
+  slug: string;
   createdAt: string;
+  eventDate: Date;
+  category: {
+    _id: string;
+    name: string;
+  };
 }

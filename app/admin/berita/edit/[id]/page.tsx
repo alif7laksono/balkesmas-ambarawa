@@ -15,7 +15,7 @@ export default async function EditBeritaPage({ params }: EditBeritaPageProps) {
 
   const session = await getServerSession(authOptions);
   if (!session) {
-    redirect("/login");
+    redirect("/admin/login");
   }
 
   await connectDB();

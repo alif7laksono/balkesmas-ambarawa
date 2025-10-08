@@ -1,4 +1,5 @@
 // app/api/categories/[id]/route.ts
+
 import { NextResponse } from "next/server";
 import { connectDB } from "@/app/lib/mongodb";
 import Category from "@/app/models/Category";

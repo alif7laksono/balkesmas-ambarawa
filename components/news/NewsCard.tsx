@@ -1,8 +1,4 @@
-// component/NewsCard.tsx
-
-"use client";
-
-import { motion } from "framer-motion";
+// components/news/NewsCard.tsx
 import Link from "next/link";
 import Image from "next/image";
 
@@ -11,63 +7,50 @@ interface NewsCardProps {
   title: string;
   content: string;
   imageUrl: string;
+  slug: string;
   createdAt: string;
+  eventDate: Date;
 }
 
 export default function NewsCard({
-  _id,
   title,
   content,
   imageUrl,
-  createdAt,
+  slug,
+  eventDate,
 }: NewsCardProps) {
+  const displayDate = eventDate ? new Date(eventDate) : new Date();
+
   return (
-    <motion.div
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-      className="rounded-2xl overflow-hidden shadow-lg bg-white border border-gray-200"
-    >
-      {/* Gambar */}
-      <div className="h-48 w-full overflow-hidden">
-        {imageUrl ? (
+    <Link href={`/berita/${slug}`} className="block group">
+      <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+        {/* Image */}
+        <div className="relative md:h-72 h-60 w-full">
           <Image
-            src={imageUrl}
+            src={imageUrl || "/images/default-news.jpg"}
             alt={title}
-            width={400}
-            height={250}
-            className="w-full h-48 object-cover"
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
-        ) : (
-          <Image
-            src="/uploads/default-news.jpg" // ✅ bikin gambar default di /public
-            alt="default"
-            width={400}
-            height={250}
-            className="w-full h-48 object-cover"
-          />
-        )}
-      </div>
+        </div>
 
-      {/* Konten */}
-      <div className="p-4 space-y-2">
-        <p className="text-xs text-gray-500">
-          {new Date(createdAt).toLocaleDateString("id-ID", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          })}
-        </p>
-        <h3 className="text-lg font-semibold line-clamp-2">{title}</h3>
-        <p className="text-sm text-gray-600 line-clamp-3">{content}</p>
-
-        {/* Link ke detail */}
-        <Link
-          href={`/berita/${_id}`}
-          className="text-blue-600 text-sm font-medium hover:underline"
-        >
-          Baca Selengkapnya →
-        </Link>
+        {/* Content */}
+        <div className="p-4">
+          <h3 className="font-bold text-lg mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+            {title}
+          </h3>
+          <p className="text-gray-600 text-sm mb-3 line-clamp-3">{content}</p>
+          {/* ✅ Hanya tampilkan eventDate saja */}
+          <p className="text-gray-500 text-xs flex items-center gap-1">
+            <span>📅</span>
+            {displayDate.toLocaleDateString("id-ID", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </p>
+        </div>
       </div>
-    </motion.div>
+    </Link>
   );
 }

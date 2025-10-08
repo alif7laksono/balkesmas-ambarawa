@@ -1,3 +1,5 @@
+// app/admin/categories/CategoriesPageClient.tsx
+
 "use client";
 
 import { useEffect, useState } from "react";

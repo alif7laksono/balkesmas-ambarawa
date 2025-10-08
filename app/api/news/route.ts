@@ -5,21 +5,74 @@ import { connectDB } from "@/app/lib/mongodb";
 import News from "@/app/models/News";
 import { writeFile } from "fs/promises";
 import path from "path";
-import mongoose from "mongoose";
+import { validateFile } from "@/app/lib/fileUtils";
+
+interface NewsQuery {
+  title?: { $regex: string; $options: string };
+  category?: string;
+  status: string;
+}
 
 // GET semua berita
 export async function GET(req: Request) {
   try {
     await connectDB();
     const { searchParams } = new URL(req.url);
-    const search = searchParams.get("search") || "";
 
-    const query = search ? { title: { $regex: search, $options: "i" } } : {};
+    // ✅ NEW: Pagination & Filter parameters
+    const search = searchParams.get("search") || "";
+    const category = searchParams.get("category") || "";
+    const status = searchParams.get("status") || "";
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "10");
+    const sortBy = searchParams.get("sortBy") || "eventDate";
+    const sortOrder = searchParams.get("sortOrder") || "desc";
+
+    const skip = (page - 1) * limit;
+
+    console.log("API Parameters:", { search, category, page, limit });
+
+    // ✅ NEW: Build query object
+    const query: NewsQuery = { status: "published" };
+
+    if (search) {
+      query.title = { $regex: search, $options: "i" };
+    }
+
+    if (category) {
+      query.category = category;
+    }
+
+    if (status) {
+      query.status = status;
+    }
+
+    // ✅ NEW: Get total count for pagination
+    console.log("MongoDB Query:", JSON.stringify(query));
+    const total = await News.countDocuments(query);
+
+    // ✅ NEW: Get paginated data
     const news = await News.find(query)
       .populate("category", "name description")
-      .sort({ date: -1 });
+      .sort({ [sortBy]: sortOrder === "desc" ? -1 : 1 })
+      .skip(skip)
+      .limit(limit);
 
-    return NextResponse.json({ success: true, data: news });
+    console.log("Results:", news.length, "items found");
+
+    return NextResponse.json({
+      success: true,
+      data: news,
+      pagination: {
+        // ✅ NEW: Pagination metadata
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+        hasNext: page < Math.ceil(total / limit),
+        hasPrev: page > 1,
+      },
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
@@ -27,6 +80,15 @@ export async function GET(req: Request) {
       { status: 500 }
     );
   }
+}
+
+function generateSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9 -]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .trim();
 }
 
 // POST buat berita baru
@@ -38,6 +100,8 @@ export async function POST(req: Request) {
     const title = formData.get("title") as string;
     const content = formData.get("content") as string;
     const category = formData.get("category") as string;
+    const status = (formData.get("status") as string) || "draft";
+    const eventDate = formData.get("eventDate") as string; // ✅ NEW
     const file = formData.get("image") as File | null;
 
     if (!title || !content || !category || !file) {
@@ -47,11 +111,12 @@ export async function POST(req: Request) {
       );
     }
 
-    if (!mongoose.Types.ObjectId.isValid(category)) {
-      return NextResponse.json(
-        { success: false, message: "ID kategori tidak valid" },
-        { status: 400 }
-      );
+    // ✅ NEW: Generate unique slug
+    let slug = generateSlug(title);
+    let counter = 1;
+    while (await News.findOne({ slug })) {
+      slug = `${generateSlug(title)}-${counter}`;
+      counter++;
     }
 
     // Simpan file ke public/uploads
@@ -67,8 +132,36 @@ export async function POST(req: Request) {
     const imageUrl = `/uploads/${fileName}`;
 
     // Auto generate excerpt (max 300 char)
-    const excerpt =
-      content.substring(0, 300) + (content.length > 300 ? "..." : "");
+    const createExcerpt = (
+      htmlContent: string,
+      maxLength: number = 160
+    ): string => {
+      // Remove HTML tags
+      const plainText = htmlContent.replace(/<[^>]*>/g, "");
+
+      // Trim and get first meaningful part
+      const trimmed = plainText.trim();
+
+      // Find a good breaking point (end of sentence or word)
+      if (trimmed.length <= maxLength) return trimmed;
+
+      // Try to break at sentence end
+      const sentenceEnd = trimmed.substring(0, maxLength).lastIndexOf(".");
+      if (sentenceEnd > maxLength * 0.5) {
+        return trimmed.substring(0, sentenceEnd + 1);
+      }
+
+      // Try to break at word boundary
+      const wordBoundary = trimmed.substring(0, maxLength).lastIndexOf(" ");
+      if (wordBoundary > maxLength * 0.7) {
+        return trimmed.substring(0, wordBoundary) + "...";
+      }
+
+      // Fallback: hard break with ellipsis
+      return trimmed.substring(0, maxLength - 3) + "...";
+    };
+
+    const excerpt = createExcerpt(content, 160);
 
     const newNews = await News.create({
       title,
@@ -76,8 +169,19 @@ export async function POST(req: Request) {
       category,
       excerpt,
       image: imageUrl,
+      slug,
+      status,
+      eventDate: new Date(eventDate),
       date: new Date(),
     });
+
+    const validation = validateFile(file);
+    if (!validation.isValid) {
+      return NextResponse.json(
+        { success: false, message: validation.error },
+        { status: 400 }
+      );
+    }
 
     return NextResponse.json({ success: true, data: newNews });
   } catch (error) {

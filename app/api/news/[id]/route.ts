@@ -1,104 +1,122 @@
 // app/api/news/[id]/route.ts
 
-// app/api/news/[id]/route.ts
-
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/app/lib/mongodb";
 import News from "@/app/models/News";
-import mongoose from "mongoose";
+import { writeFile } from "fs/promises";
+import path from "path";
+import { deleteFile } from "@/app/lib/fileUtils";
+import { createExcerpt } from "@/app/lib/excerptUtils";
 
-// GET detail berita
-export async function GET(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const { id } = await params;
-    await connectDB();
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return NextResponse.json(
-        { success: false, message: "ID berita tidak valid" },
-        { status: 400 }
-      );
-    }
-
-    const news = await News.findById(id).populate(
-      "category",
-      "name description"
-    );
-    if (!news) {
-      return NextResponse.json(
-        { success: false, message: "Berita tidak ditemukan" },
-        { status: 404 }
-      );
-    }
-    return NextResponse.json({ success: true, data: news });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { success: false, message: "Gagal mengambil detail berita" },
-      { status: 500 }
-    );
-  }
+interface UpdateNewsData {
+  title: string;
+  content: string;
+  category: string;
+  status?: string;
+  slug?: string;
+  image?: string;
+  excerpt?: string;
+  eventDate: Date;
 }
 
-// PUT update berita
 export async function PUT(
-  req: Request,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
     await connectDB();
+    const { id } = await params;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return NextResponse.json(
-        { success: false, message: "ID berita tidak valid" },
-        { status: 400 }
-      );
-    }
+    const formData = await request.formData();
+    const title = formData.get("title") as string;
+    const content = formData.get("content") as string;
+    const category = formData.get("category") as string;
+    const status = formData.get("status") as string;
+    const slug = formData.get("slug") as string;
+    const eventDate = formData.get("eventDate") as string;
+    const imageFile = formData.get("image") as File | null;
 
-    const body = await req.json();
+    console.log("📨 Received eventDate:", eventDate);
+    console.log("📨 Received data:", { title, eventDate });
 
-    const updatedNews = await News.findByIdAndUpdate(
-      id,
-      { ...body, updatedAt: new Date() },
-      { new: true }
-    );
-
-    if (!updatedNews) {
+    // Cari berita yang akan diupdate
+    const existingNews = await News.findById(id);
+    if (!existingNews) {
       return NextResponse.json(
         { success: false, message: "Berita tidak ditemukan" },
         { status: 404 }
       );
     }
 
-    return NextResponse.json({ success: true, data: updatedNews });
+    // Data update
+    const updateData: UpdateNewsData = {
+      title,
+      content,
+      category,
+      eventDate: new Date(eventDate),
+    };
+
+    if (slug) {
+      updateData.slug = slug;
+    }
+
+    if (status) {
+      updateData.status = status;
+    }
+
+    // Handle image upload jika ada file baru
+    if (imageFile && imageFile.size > 0) {
+      const bytes = await imageFile.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+
+      // Generate unique filename
+      const timestamp = Date.now();
+      const originalName = imageFile.name;
+      const fileExtension = originalName.split(".").pop();
+      const fileName = `news-${timestamp}.${fileExtension}`;
+
+      // Simpan file ke public/uploads
+      const uploadDir = path.join(process.cwd(), "public/uploads");
+      const filePath = path.join(uploadDir, fileName);
+
+      await writeFile(filePath, buffer);
+
+      // Update image path
+      updateData.image = `/uploads/${fileName}`;
+
+      if (existingNews.image && existingNews.image.startsWith("/uploads/")) {
+        await deleteFile(existingNews.image);
+      }
+    }
+
+    const excerpt = createExcerpt(content, 160);
+    updateData.excerpt = excerpt;
+
+    const updatedNews = await News.findByIdAndUpdate(id, updateData, {
+      new: true,
+    }).populate("category");
+
+    return NextResponse.json({
+      success: true,
+      message: "Berita berhasil diupdate",
+      data: updatedNews,
+    });
   } catch (error) {
-    console.error(error);
+    console.error("Error updating news:", error);
     return NextResponse.json(
-      { success: false, message: "Gagal mengupdate berita" },
+      { success: false, message: "Terjadi kesalahan server" },
       { status: 500 }
     );
   }
 }
 
-// DELETE hapus berita
 export async function DELETE(
-  req: Request,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
     await connectDB();
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return NextResponse.json(
-        { success: false, message: "ID berita tidak valid" },
-        { status: 400 }
-      );
-    }
+    const { id } = await params;
 
     const deletedNews = await News.findByIdAndDelete(id);
 
@@ -109,14 +127,19 @@ export async function DELETE(
       );
     }
 
+    // ✅ Hapus file gambar terkait
+    if (deletedNews.image && deletedNews.image.startsWith("/uploads/")) {
+      await deleteFile(deletedNews.image);
+    }
+
     return NextResponse.json({
       success: true,
       message: "Berita berhasil dihapus",
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error deleting news:", error);
     return NextResponse.json(
-      { success: false, message: "Gagal menghapus berita" },
+      { success: false, message: "Terjadi kesalahan server" },
       { status: 500 }
     );
   }
