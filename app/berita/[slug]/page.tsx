@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { connectDB } from "@/app/lib/mongodb";
 import News from "@/app/models/News";
+import Category from "@/app/models/Category";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import {

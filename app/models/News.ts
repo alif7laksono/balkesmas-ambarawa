@@ -69,7 +69,7 @@ const NewsSchema: Schema = new Schema(
 
     category: {
       type: Schema.Types.ObjectId,
-      ref: "Category",
+      ref: "Category", // Sekarang Category sudah terdaftar
       required: true,
     },
   },
