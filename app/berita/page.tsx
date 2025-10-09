@@ -34,15 +34,14 @@ export default async function NewsPage() {
   return (
     <div>
       <Navbar />
-      <div className="max-w-6xl mx-auto px-6 py-12">
-        {/* Header dengan Filter */}
+      <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="mb-8">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-8 text-gray-800">
-            Berita Terbaru
-          </h1>
-
-          {/* Filter Component */}
-          <NewsFilter categories={categories} />
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-8">
+            {/* Filter Component */}
+            <div className="flex-1 min-w-0">
+              <NewsFilter categories={categories} />
+            </div>
+          </div>
         </div>
 
         {/* Grid Berita */}

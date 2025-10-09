@@ -48,81 +48,89 @@ export default function NewsFilter({ categories }: NewsFilterProps) {
   const hasActiveFilters = search || category;
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md border">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Search Input */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Cari Berita
-          </label>
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cari judul berita..."
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-          />
-        </div>
+    <div className="mb-8">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-8 mb-6">
+        {/* Filter Controls */}
+        <div className="flex-1 min-w-0">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Search Input */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Cari Berita
+              </label>
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Cari judul berita..."
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              />
+            </div>
 
-        {/* Category Filter */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Filter Kategori
-          </label>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-          >
-            <option value="">Semua Kategori</option>
-            {categories.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Clear Filters */}
-        <div className="flex items-end">
-          {hasActiveFilters && (
-            <button
-              onClick={clearFilters}
-              className="w-full md:w-auto px-4 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
-            >
-              Hapus Filter
-            </button>
-          )}
+            {/* Category Filter */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Filter Kategori
+              </label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              >
+                <option value="">Semua Kategori</option>
+                {categories.map((cat) => (
+                  <option key={cat._id} value={cat._id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Active Filters Badge */}
-      {hasActiveFilters && (
-        <div className="mt-4 flex flex-wrap gap-2">
-          {search && (
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-              Pencarian: &quot;{search}&quot;
-              <button
-                onClick={() => setSearch("")}
-                className="ml-2 hover:text-blue-600"
-              >
-                ×
-              </button>
-            </span>
-          )}
-          {category && (
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-              Kategori: {categories.find((c) => c._id === category)?.name}
-              <button
-                onClick={() => setCategory("")}
-                className="ml-2 hover:text-green-600"
-              >
-                ×
-              </button>
-            </span>
+      {/* Clear Filters Button and Active Filters */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        {/* Clear Filters Button */}
+        <div>
+          {hasActiveFilters && (
+            <button
+              onClick={clearFilters}
+              className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors text-sm"
+            >
+              Hapus Semua Filter
+            </button>
           )}
         </div>
-      )}
+
+        {/* Active Filters Badge */}
+        {hasActiveFilters && (
+          <div className="flex flex-wrap gap-2">
+            {search && (
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                Pencarian: &quot;{search}&quot;
+                <button
+                  onClick={() => setSearch("")}
+                  className="ml-2 hover:text-blue-600 text-sm"
+                >
+                  ×
+                </button>
+              </span>
+            )}
+            {category && (
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                Kategori: {categories.find((c) => c._id === category)?.name}
+                <button
+                  onClick={() => setCategory("")}
+                  className="ml-2 hover:text-green-600 text-sm"
+                >
+                  ×
+                </button>
+              </span>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
