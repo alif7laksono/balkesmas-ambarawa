@@ -39,15 +39,20 @@ async function getCategories(): Promise<Category[]> {
   return data.data || data; // Sesuaikan dengan response structure API Anda
 }
 
-interface NewsPageProps {
-  searchParams: {
-    category?: string;
-    search?: string;
-  };
-}
+// interface NewsPageProps {
+//   searchParams: {
+//     category?: string;
+//     search?: string;
+//   };
+// }
 
-export default async function NewsPage({ searchParams }: NewsPageProps) {
-  const { category, search } = searchParams;
+export default async function NewsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string; search?: string }>;
+}) {
+  // Await dan destructure sekaligus
+  const { category, search } = await searchParams;
 
   const newsData = await getNews(category, search);
   const categories = await getCategories();

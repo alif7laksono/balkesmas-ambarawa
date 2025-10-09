@@ -79,6 +79,7 @@ export default function NewsCard({
         setTimeout(() => setCopied(false), 2000);
       } catch (error) {
         // Fallback for older browsers
+        console.log(error)
         const textArea = document.createElement("textarea");
         textArea.value = url;
         document.body.appendChild(textArea);
