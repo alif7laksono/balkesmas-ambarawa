@@ -1,5 +1,5 @@
 // components/news/NewsCard.tsx
-"use client"
+"use client";
 import Image from "next/image";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -69,6 +69,7 @@ export default function NewsCard({
         });
       } catch (error) {
         console.log("Sharing cancelled");
+        console.log(error);
       }
     } else {
       // Fallback: copy to clipboard

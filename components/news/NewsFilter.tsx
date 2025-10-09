@@ -16,11 +16,6 @@ export default function NewsFilter({ categories }: NewsFilterProps) {
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [category, setCategory] = useState(searchParams.get("category") || "");
 
-  // ✅ DEBUG: Log categories untuk pastikan data benar
-  useEffect(() => {
-    console.log("📋 Available categories:", categories);
-  }, [categories]);
-
   // Update URL when filters change
   useEffect(() => {
     const params = new URLSearchParams();
@@ -31,7 +26,7 @@ export default function NewsFilter({ categories }: NewsFilterProps) {
     const queryString = params.toString();
     const newUrl = queryString ? `/berita?${queryString}` : "/berita";
 
-    console.log("🔗 Navigating to:", newUrl); // ✅ DEBUG
+    console.log("🔗 Navigating to:", newUrl);
     router.push(newUrl, { scroll: false });
   }, [search, category, router]);
 
@@ -43,50 +38,53 @@ export default function NewsFilter({ categories }: NewsFilterProps) {
 
   const hasActiveFilters = search || category;
 
-  return (
-    <div className="mb-8">
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-8 mb-6">
-        {/* Filter Controls */}
-        <div className="flex-1 min-w-0">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Search Input */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Cari Berita
-              </label>
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Cari judul berita..."
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-              />
-            </div>
+  // Helper function untuk find category name
+  const getCategoryName = (categoryId: string): string => {
+    const foundCategory = categories.find(
+      (c: Category) => c._id === categoryId
+    );
+    return foundCategory?.name || "Unknown Category";
+  };
 
-            {/* Category Filter */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Filter Kategori
-              </label>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-              >
-                <option value="">Semua Kategori</option>
-                {categories.map((cat) => (
-                  <option key={cat._id} value={cat._id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+  return (
+    <div className="w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Search Input */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Cari Berita
+          </label>
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Cari judul berita..."
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+          />
+        </div>
+
+        {/* Category Filter */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Filter Kategori
+          </label>
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+          >
+            <option value="">Semua Kategori</option>
+            {categories.map((cat: Category) => (
+              <option key={cat._id} value={cat._id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
       {/* Clear Filters Button and Active Filters */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-4">
         {/* Clear Filters Button */}
         <div>
           {hasActiveFilters && (
@@ -115,7 +113,7 @@ export default function NewsFilter({ categories }: NewsFilterProps) {
             )}
             {category && (
               <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                Kategori: {categories.find((c) => c._id === category)?.name}
+                Kategori: {getCategoryName(category)}
                 <button
                   onClick={() => setCategory("")}
                   className="ml-2 hover:text-green-600 text-sm"
