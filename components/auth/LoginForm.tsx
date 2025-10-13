@@ -27,8 +27,9 @@ export default function LoginForm() {
     });
 
     if (!res?.error) {
-      toast.success("Berhasil login 🎉", {
+      toast.success("Berhasil login", {
         description: "Anda akan diarahkan ke halaman admin",
+        className: "bg-white text-gray-900 border border-gray-200 font-medium",
       });
       setTimeout(() => {
         router.push(callbackUrl);

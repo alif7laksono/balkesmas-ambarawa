@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Category } from "@/app/utils/category";
+import { Category } from "@/app/utils/types";
 
 interface NewsFilterProps {
   categories: Category[];

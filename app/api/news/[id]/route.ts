@@ -3,21 +3,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/app/lib/mongodb";
 import News from "@/app/models/News";
-import { writeFile } from "fs/promises";
-import path from "path";
-import { deleteFile } from "@/app/lib/fileUtils";
+import {
+  generateFileKey,
+  getPresignedUrl,
+  extractKeyFromUrl,
+} from "@/app/lib/s3-config";
+import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { s3Client } from "@/app/lib/s3-config";
+import { UpdateNewsData } from "@/app/utils/types";
 import { createExcerpt } from "@/app/lib/excerptUtils";
-
-interface UpdateNewsData {
-  title: string;
-  content: string;
-  category: string;
-  status?: string;
-  slug?: string;
-  image?: string;
-  excerpt?: string;
-  eventDate: Date;
-}
 
 export async function PUT(
   request: NextRequest,
@@ -36,10 +30,6 @@ export async function PUT(
     const eventDate = formData.get("eventDate") as string;
     const imageFile = formData.get("image") as File | null;
 
-    console.log("📨 Received eventDate:", eventDate);
-    console.log("📨 Received data:", { title, eventDate });
-
-    // Cari berita yang akan diupdate
     const existingNews = await News.findById(id);
     if (!existingNews) {
       return NextResponse.json(
@@ -48,7 +38,6 @@ export async function PUT(
       );
     }
 
-    // Data update
     const updateData: UpdateNewsData = {
       title,
       content,
@@ -56,36 +45,67 @@ export async function PUT(
       eventDate: new Date(eventDate),
     };
 
-    if (slug) {
-      updateData.slug = slug;
-    }
+    if (slug) updateData.slug = slug;
+    if (status) updateData.status = status;
 
-    if (status) {
-      updateData.status = status;
-    }
-
-    // Handle image upload jika ada file baru
+    // Handle image upload to S3 if new file provided
     if (imageFile && imageFile.size > 0) {
+      // Validate new image
+      if (imageFile.size > 1024 * 1024) {
+        return NextResponse.json(
+          { success: false, message: "Ukuran gambar maksimal 1MB" },
+          { status: 400 }
+        );
+      }
+
+      const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "image/avif",
+      ];
+      if (!allowedTypes.includes(imageFile.type)) {
+        return NextResponse.json(
+          { success: false, message: "Format gambar tidak didukung" },
+          { status: 400 }
+        );
+      }
+
+      // Upload new image to S3
       const bytes = await imageFile.arrayBuffer();
       const buffer = Buffer.from(bytes);
 
-      // Generate unique filename
-      const timestamp = Date.now();
-      const originalName = imageFile.name;
-      const fileExtension = originalName.split(".").pop();
-      const fileName = `news-${timestamp}.${fileExtension}`;
+      const Key = generateFileKey("news", "images", File.name, "images");
 
-      // Simpan file ke public/uploads
-      const uploadDir = path.join(process.cwd(), "public/uploads");
-      const filePath = path.join(uploadDir, fileName);
+      const command = new PutObjectCommand({
+        Bucket: process.env.S3_BUCKET_NAME!,
+        Key,
+        Body: buffer,
+        ContentType: imageFile.type,
+        ACL: "public-read",
+      });
 
-      await writeFile(filePath, buffer);
+      await s3Client.send(command);
+      updateData.image = await getPresignedUrl(Key);
 
-      // Update image path
-      updateData.image = `/uploads/${fileName}`;
-
-      if (existingNews.image && existingNews.image.startsWith("/uploads/")) {
-        await deleteFile(existingNews.image);
+      // Delete old image from S3 if it exists and is from S3
+      if (
+        existingNews.image &&
+        existingNews.image.includes(process.env.S3_BUCKET_NAME!)
+      ) {
+        try {
+          const oldKey = extractKeyFromUrl(existingNews.image);
+          if (oldKey) {
+            const deleteCommand = new DeleteObjectCommand({
+              Bucket: process.env.S3_BUCKET_NAME!,
+              Key: oldKey,
+            });
+            await s3Client.send(deleteCommand);
+          }
+        } catch (error) {
+          console.error("Error deleting old image from S3:", error);
+          // Continue with update even if delete fails
+        }
       }
     }
 
@@ -118,19 +138,33 @@ export async function DELETE(
     await connectDB();
     const { id } = await params;
 
-    const deletedNews = await News.findByIdAndDelete(id);
-
-    if (!deletedNews) {
+    const news = await News.findById(id);
+    if (!news) {
       return NextResponse.json(
         { success: false, message: "Berita tidak ditemukan" },
         { status: 404 }
       );
     }
 
-    // ✅ Hapus file gambar terkait
-    if (deletedNews.image && deletedNews.image.startsWith("/uploads/")) {
-      await deleteFile(deletedNews.image);
+    // Delete image from S3 if it exists and is from S3
+    if (news.image && news.image.includes(process.env.S3_BUCKET_NAME!)) {
+      try {
+        const key = extractKeyFromUrl(news.image);
+        if (key) {
+          const deleteCommand = new DeleteObjectCommand({
+            Bucket: process.env.S3_BUCKET_NAME!,
+            Key: key,
+          });
+          await s3Client.send(deleteCommand);
+        }
+      } catch (error) {
+        console.error("Error deleting image from S3:", error);
+        // Continue with news deletion even if image delete fails
+      }
     }
+
+    // Delete news from database
+    await News.findByIdAndDelete(id);
 
     return NextResponse.json({
       success: true,

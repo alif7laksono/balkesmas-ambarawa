@@ -4,25 +4,13 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
-
-type NewsProps = {
-  news: {
-    _id: string;
-    title: string;
-    content: string;
-    image: string;
-    category?: { _id: string; name: string };
-    createdAt: string;
-    eventDate: Date;
-  }[];
-};
+import { NewsProps } from "@/app/utils/types";
 
 export default function BeritaPageClient({ news }: NewsProps) {
   const [newsList, setNewsList] = useState(news);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleDelete = async (id: string, title: string) => {
-    // Confirmation dialog
     if (!confirm(`Apakah Anda yakin ingin menghapus berita "${title}"?`)) {
       return;
     }
@@ -36,18 +24,21 @@ export default function BeritaPageClient({ news }: NewsProps) {
 
       const data = await res.json();
 
+      if (!res.ok) {
+        throw new Error(data.message || "Gagal menghapus berita");
+      }
+
       if (data.success) {
-        // Remove from state
         setNewsList(newsList.filter((item) => item._id !== id));
         toast.success("Berita berhasil dihapus 🗑️");
       } else {
-        toast.error("Gagal menghapus berita ⚠️", {
-          description: data.message,
-        });
+        throw new Error(data.message || "Gagal menghapus berita");
       }
     } catch (error) {
-      toast.error("Terjadi kesalahan server 😢");
-      console.error(error);
+      console.error("Delete error:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Terjadi kesalahan server 😢"
+      );
     } finally {
       setDeletingId(null);
     }

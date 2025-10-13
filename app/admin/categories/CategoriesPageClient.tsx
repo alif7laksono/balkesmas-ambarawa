@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import CategoryForm from "@/components/category/CategoryForm";
 import { toast } from "sonner";
 import LogoutButton from "@/components/auth/LogoutButton";
-import { Category } from "@/app/utils/category";
+import { Category } from "@/app/utils/types";
 
 export default function CategoriesPageClient() {
   const [categories, setCategories] = useState<Category[]>([]);

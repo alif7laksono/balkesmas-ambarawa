@@ -1,21 +1,7 @@
 // app/models/News.ts
 
-import mongoose, { Schema, Document, models } from "mongoose";
-export interface INews extends Document {
-  title: string;
-  content: string;
-  excerpt: string;
-  image: string;
-  slug: string;
-  status: "draft" | "published" | "archived";
-  metaTitle?: string;
-  metaDescription?: string;
-  date: Date;
-  eventDate: Date;
-  category: mongoose.Types.ObjectId;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import mongoose, { Schema, models } from "mongoose";
+import { INews } from "@/app/utils/types";
 
 const NewsSchema: Schema = new Schema(
   {

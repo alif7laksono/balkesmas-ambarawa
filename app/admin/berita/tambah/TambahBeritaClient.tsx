@@ -8,7 +8,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Image from "next/image";
 import TextAlign from "@tiptap/extension-text-align";
 import { useSlugGenerator } from "@/app/hooks/useSlugGenerator";
-import { Category } from "@/app/utils/category";
+import { Category } from "@/app/utils/types";
 
 interface MenuBarProps {
   editor: Editor | null;

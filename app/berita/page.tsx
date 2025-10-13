@@ -1,10 +1,10 @@
 // app/berita/page.tsx
 import NewsCard from "@/components/news/NewsCard";
-import { News } from "@/app/utils/news";
+import { News } from "@/app/utils/types";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import NewsFilter from "@/components/news/NewsFilter";
-import { Category } from "../utils/category";
+import { Category } from "@/app/utils/types";
 
 async function getNews(category?: string, search?: string) {
   let url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/news`;

@@ -1,12 +1,6 @@
 // app/models/Category.ts
-import mongoose, { Schema, Document, Model } from "mongoose";
-
-export interface ICategory extends Document {
-  name: string;
-  description?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import mongoose, { Schema, Model } from "mongoose";
+import { ICategory } from "@/app/utils/types";
 
 const CategorySchema: Schema = new Schema(
   {

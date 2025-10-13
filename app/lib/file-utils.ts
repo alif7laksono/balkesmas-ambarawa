@@ -1,5 +1,3 @@
-// app/lib/fileUtils.ts
-
 export interface UploadImageResponse {
   message: string;
   key: string;
@@ -22,39 +20,12 @@ export interface BatchImageUrlsResponse {
   }>;
 }
 
-// Validate image file before upload
-export const validateImageFile = (
-  file: File
-): { isValid: boolean; error?: string } => {
-  // Check file size (max 1MB)
-  if (file.size > 1024 * 1024) {
-    return { isValid: false, error: "Ukuran gambar maksimal 1MB" };
-  }
-
-  // Check file type
-  const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/avif"];
-  if (!allowedTypes.includes(file.type)) {
-    return {
-      isValid: false,
-      error: "Format gambar tidak didukung. Gunakan JPEG, PNG, WebP, atau AVIF",
-    };
-  }
-
-  return { isValid: true };
-};
-
 // Utility functions for client-side file operations
 export const uploadImageToS3 = async (
   file: File,
   category: string,
   pathname: string
 ): Promise<UploadImageResponse> => {
-  // Validate file first
-  const validation = validateImageFile(file);
-  if (!validation.isValid) {
-    throw new Error(validation.error);
-  }
-
   const formData = new FormData();
   formData.append("file", file);
   formData.append("category", category);
@@ -66,8 +37,7 @@ export const uploadImageToS3 = async (
   });
 
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || `Upload failed: ${response.statusText}`);
+    throw new Error(`Upload failed: ${response.statusText}`);
   }
 
   return response.json();
@@ -83,10 +53,7 @@ export const getImageUrl = async (
   );
 
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(
-      errorData.error || `Get image failed: ${response.statusText}`
-    );
+    throw new Error(`Get image failed: ${response.statusText}`);
   }
 
   return response.json();
@@ -103,10 +70,7 @@ export const deleteImageFromS3 = async (
   );
 
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(
-      errorData.error || `Delete image failed: ${response.statusText}`
-    );
+    throw new Error(`Delete image failed: ${response.statusText}`);
   }
 
   return response.json();
@@ -124,10 +88,7 @@ export const getBatchImageUrls = async (
   });
 
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(
-      errorData.error || `Batch get URLs failed: ${response.statusText}`
-    );
+    throw new Error(`Batch get URLs failed: ${response.statusText}`);
   }
 
   return response.json();
