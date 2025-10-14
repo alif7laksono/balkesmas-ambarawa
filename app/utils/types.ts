@@ -109,3 +109,9 @@ export type NewsProps = {
     eventDate: Date;
   }[];
 };
+
+export interface NewsQuery {
+  status: string;
+  title?: { $regex: string; $options: string };
+  category?: string;
+}

@@ -7,6 +7,7 @@ import { generateFileKey, getPresignedUrl } from "@/app/lib/s3-config";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { s3Client } from "@/app/lib/s3-config";
 import { createExcerpt } from "@/app/lib/excerptUtils";
+import { NewsQuery } from "@/app/utils/types";
 
 function generateSlug(title: string): string {
   return title
@@ -17,6 +18,118 @@ function generateSlug(title: string): string {
     .trim();
 }
 
+// ✅ GET all news
+export async function GET(req: Request) {
+  try {
+    await connectDB();
+    const { searchParams } = new URL(req.url);
+
+    // ✅ Parameters dengan default values
+    const search = searchParams.get("search") || "";
+    const category = searchParams.get("category") || "";
+    const status = searchParams.get("status") || "published";
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "9");
+    const sortBy = searchParams.get("sortBy") || "eventDate";
+    const sortOrder = searchParams.get("sortOrder") || "desc";
+
+    const skip = (page - 1) * limit;
+
+    console.log("🔗 API Parameters:", {
+      search,
+      category,
+      status,
+      page,
+      limit,
+    });
+
+    // ✅ Build query object
+    const query: NewsQuery = { status: "published" };
+
+    if (search) {
+      query.title = { $regex: search, $options: "i" };
+    }
+
+    if (category) {
+      query.category = category;
+    }
+
+    // ✅ Get total count for pagination
+    const total = await News.countDocuments(query);
+
+    // ✅ Get paginated data
+    const news = await News.find(query)
+      .populate("category", "name description")
+      .sort({ [sortBy]: sortOrder === "desc" ? -1 : 1 })
+      .skip(skip)
+      .limit(limit);
+
+    // ✅ GENERATE NEW PRESIGNED URLS untuk setiap news
+    const newsWithFreshUrls = await Promise.all(
+      news.map(async (newsItem) => {
+        try {
+          // Extract key dari S3 URL yang ada
+          const key = newsItem.image
+            .split("/")
+            .slice(4)
+            .join("/")
+            .split("?")[0];
+
+          // Generate new presigned URL
+          const freshImageUrl = await getPresignedUrl(key);
+
+          return {
+            ...newsItem.toObject(),
+            image: freshImageUrl,
+          };
+        } catch (urlError) {
+          console.error(
+            "Error generating URL for news:",
+            newsItem._id,
+            urlError
+          );
+          // Return original data jika error
+          return newsItem.toObject();
+        }
+      })
+    );
+
+    console.log("✅ Results:", newsWithFreshUrls.length, "news found");
+
+    return NextResponse.json({
+      success: true,
+      data: newsWithFreshUrls,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+        hasNext: page < Math.ceil(total / limit),
+        hasPrev: page > 1,
+      },
+    });
+  } catch (error) {
+    console.error("❌ GET /api/news Error:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Failed to fetch news",
+        data: [],
+        pagination: {
+          page: 1,
+          limit: 9,
+          total: 0,
+          totalPages: 0,
+          hasNext: false,
+          hasPrev: false,
+        },
+      },
+      { status: 500 }
+    );
+  }
+}
+
+// ✅ POST create news
 export async function POST(req: Request) {
   try {
     await connectDB();
