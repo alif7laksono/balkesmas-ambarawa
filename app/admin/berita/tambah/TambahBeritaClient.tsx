@@ -1,43 +1,37 @@
 // app/admin/berita/tambah/TambahBeritaClient.tsx
+
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useEditor, EditorContent, Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Image from "next/image";
 import TextAlign from "@tiptap/extension-text-align";
+import Underline from "@tiptap/extension-underline";
+import Image from "next/image";
 import { useSlugGenerator } from "@/app/hooks/useSlugGenerator";
-import { Category } from "@/app/utils/types";
 
-interface MenuBarProps {
-  editor: Editor | null;
-}
+// ✅ Gunakan MenuBar yang sama seperti di EditBeritaClient
+const MenuBar = ({ editor }: { editor: Editor | null }) => {
+  if (!editor) {
+    return null;
+  }
 
-// Toolbar Component untuk TipTap
-const MenuBar = ({ editor }: MenuBarProps) => {
-  if (!editor) return null;
+  const isValidHeadingLevel = (
+    level: number
+  ): level is 1 | 2 | 3 | 4 | 5 | 6 => {
+    return [1, 2, 3, 4, 5, 6].includes(level);
+  };
 
   return (
     <div className="border border-gray-300 rounded-t-lg p-2 flex flex-wrap gap-1 bg-gray-50">
+      {/* Headings */}
       <select
         value={editor.getAttributes("heading").level || ""}
         onChange={(e) => {
           const level = parseInt(e.target.value);
-          // ✅ Type assertion ke Level type yang valid
-          if (
-            level === 1 ||
-            level === 2 ||
-            level === 3 ||
-            level === 4 ||
-            level === 5 ||
-            level === 6
-          ) {
-            editor
-              .chain()
-              .focus()
-              .toggleHeading({ level: level as 1 | 2 | 3 | 4 | 5 | 6 })
-              .run();
+          if (level && isValidHeadingLevel(level)) {
+            editor.chain().focus().toggleHeading({ level }).run();
           } else {
             editor.chain().focus().setParagraph().run();
           }
@@ -45,13 +39,14 @@ const MenuBar = ({ editor }: MenuBarProps) => {
         className="p-1 border rounded text-sm"
       >
         <option value="">Paragraph</option>
-        <option value="1">H1</option>
-        <option value="2">H2</option>
-        <option value="3">H3</option>
-        <option value="4">H4</option>
-        <option value="5">H5</option>
-        <option value="6">H6</option>
+        <option value="1">Heading 1</option>
+        <option value="2">Heading 2</option>
+        <option value="3">Heading 3</option>
+        <option value="4">Heading 4</option>
+        <option value="5">Heading 5</option>
+        <option value="6">Heading 6</option>
       </select>
+
       {/* Text Formatting */}
       <button
         type="button"
@@ -63,6 +58,7 @@ const MenuBar = ({ editor }: MenuBarProps) => {
       >
         <strong>B</strong>
       </button>
+
       <button
         type="button"
         onClick={() => editor.chain().focus().toggleItalic().run()}
@@ -73,6 +69,7 @@ const MenuBar = ({ editor }: MenuBarProps) => {
       >
         <em>I</em>
       </button>
+
       <button
         type="button"
         onClick={() => editor.chain().focus().toggleUnderline().run()}
@@ -83,6 +80,7 @@ const MenuBar = ({ editor }: MenuBarProps) => {
       >
         <u>U</u>
       </button>
+
       {/* Lists */}
       <button
         type="button"
@@ -94,6 +92,7 @@ const MenuBar = ({ editor }: MenuBarProps) => {
       >
         • List
       </button>
+
       <button
         type="button"
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
@@ -104,7 +103,8 @@ const MenuBar = ({ editor }: MenuBarProps) => {
       >
         1. List
       </button>
-      {/* Alignment */}
+
+      {/* Text Alignment */}
       <button
         type="button"
         onClick={() => editor.chain().focus().setTextAlign("left").run()}
@@ -117,6 +117,7 @@ const MenuBar = ({ editor }: MenuBarProps) => {
       >
         ⬅
       </button>
+
       <button
         type="button"
         onClick={() => editor.chain().focus().setTextAlign("center").run()}
@@ -129,6 +130,7 @@ const MenuBar = ({ editor }: MenuBarProps) => {
       >
         ↔
       </button>
+
       <button
         type="button"
         onClick={() => editor.chain().focus().setTextAlign("right").run()}
@@ -141,33 +143,73 @@ const MenuBar = ({ editor }: MenuBarProps) => {
       >
         ➡
       </button>
+
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().setTextAlign("justify").run()}
+        className={`p-2 rounded ${
+          editor.isActive({ textAlign: "justify" })
+            ? "bg-gray-300"
+            : "hover:bg-gray-200"
+        }`}
+        title="Justify"
+      >
+        ☰
+      </button>
+
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().setHardBreak().run()}
+        className="p-2 rounded hover:bg-gray-200"
+        title="Line Break"
+      >
+        ↵
+      </button>
+
+      <button
+        type="button"
+        onClick={() =>
+          editor.chain().focus().clearNodes().unsetAllMarks().run()
+        }
+        className="p-2 rounded hover:bg-gray-200 text-red-600"
+        title="Clear Formatting"
+      >
+        🗑️
+      </button>
     </div>
   );
 };
 
 export default function TambahBeritaClient() {
-  const [isClient, setIsClient] = useState(false);
   const [form, setForm] = useState({
     title: "",
     content: "",
     category: "",
-    status: "draft" as "draft" | "published",
-    eventDate: new Date().toISOString().split("T")[0],
+    status: "draft",
+    eventDate: new Date().toISOString().split("T")[0], // ✅ Format date yang benar
   });
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<{ _id: string; name: string }[]>(
+    []
+  );
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  // ✅ Custom hook untuk slug generation
+  const { slug, setSlug, isManualEdit } = useSlugGenerator(form.title, "");
 
-  // TipTap Editor
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTitle = e.target.value;
+    setForm((prev) => ({ ...prev, title: newTitle }));
+  };
+
+  // ✅ TipTap Editor dengan konfigurasi yang sama
+  const [isClient, setIsClient] = useState(false);
   const editor = useEditor({
     extensions: [
       StarterKit,
+      Underline,
       TextAlign.configure({
         types: ["heading", "paragraph"],
       }),
@@ -177,11 +219,12 @@ export default function TambahBeritaClient() {
       const html = editor.getHTML();
       setForm((prev) => ({ ...prev, content: html }));
     },
-    immediatelyRender: false, // ✅ Important untuk avoid hydration
+    immediatelyRender: false,
   });
 
-  // ✅ Custom hook untuk slug generation
-  const { slug, setSlug, isManualEdit } = useSlugGenerator(form.title);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // ✅ Ambil daftar kategori
   useEffect(() => {
@@ -204,7 +247,7 @@ export default function TambahBeritaClient() {
       ];
       if (!allowedTypes.includes(file.type)) {
         toast.error(
-          "Format gambar tidak didukung. Gunakan JPEG, PNG, WebP, atau AVIF ⚠️"
+          "Format gambar tidak didukung. Gunakan JPEG, PNG, Avif, atau WebP ⚠️"
         );
         return;
       }
@@ -219,25 +262,23 @@ export default function TambahBeritaClient() {
     }
   };
 
-  // ✅ Handle submit
+  // ✅ Submit create
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      if (!image) {
-        toast.error("Gambar berita wajib diupload ⚠️");
-        setLoading(false);
-        return;
-      }
-
       const formData = new FormData();
       formData.append("title", form.title);
       formData.append("content", form.content);
       formData.append("category", form.category);
       formData.append("status", form.status);
       formData.append("slug", slug);
-      formData.append("image", image);
+      formData.append("eventDate", form.eventDate);
+
+      if (image) {
+        formData.append("image", image);
+      }
 
       const res = await fetch("/api/news", {
         method: "POST",
@@ -245,16 +286,11 @@ export default function TambahBeritaClient() {
       });
 
       const data = await res.json();
-
       if (data.success) {
-        toast.success(
-          form.status === "published"
-            ? "Berita berhasil diterbitkan 🎉"
-            : "Berita disimpan sebagai draft 💾"
-        );
+        toast.success("Berita berhasil ditambahkan 🎉");
         router.push("/admin/berita");
       } else {
-        toast.error("Gagal membuat berita ⚠️", {
+        toast.error("Gagal menambahkan berita ⚠️", {
           description: data.message,
         });
       }
@@ -276,9 +312,8 @@ export default function TambahBeritaClient() {
         <input
           type="text"
           value={form.title}
-          onChange={(e) => setForm({ ...form, title: e.target.value })}
+          onChange={handleTitleChange}
           className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-          placeholder="Masukkan judul berita yang menarik..."
           required
         />
       </div>
@@ -326,21 +361,6 @@ export default function TambahBeritaClient() {
             ))}
           </select>
         </div>
-        <div>
-          <label className="block mb-2 font-medium text-gray-700">
-            Tanggal Kegiatan *
-          </label>
-          <input
-            type="date"
-            value={form.eventDate}
-            onChange={(e) => setForm({ ...form, eventDate: e.target.value })}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-            required
-          />
-          <p className="text-sm text-gray-500 mt-1">
-            Tanggal ketika kegiatan/acara dilaksanakan
-          </p>
-        </div>
 
         <div>
           <label className="block mb-2 font-medium text-gray-700">
@@ -348,26 +368,39 @@ export default function TambahBeritaClient() {
           </label>
           <select
             value={form.status}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                status: e.target.value as "draft" | "published",
-              })
-            }
+            onChange={(e) => setForm({ ...form, status: e.target.value })}
             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
           >
             <option value="draft">Draft</option>
             <option value="published">Published</option>
+            <option value="archived">Archived</option>
           </select>
         </div>
       </div>
 
-      {/* Rich Text Editor dengan TipTap */}
-      {isClient && (
-        <div>
-          <label className="block mb-2 font-medium text-gray-700">
-            Konten Berita *
-          </label>
+      {/* Tanggal Kegiatan - SAMA PERSIS dengan Edit */}
+      <div>
+        <label className="block mb-2 font-medium text-gray-700">
+          Tanggal Kegiatan *
+        </label>
+        <input
+          type="date"
+          value={form.eventDate}
+          onChange={(e) => setForm({ ...form, eventDate: e.target.value })}
+          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+          required
+        />
+        <p className="text-sm text-gray-500 mt-1">
+          Tanggal ketika kegiatan/acara dilaksanakan
+        </p>
+      </div>
+
+      {/* Rich Text Editor - SAMA PERSIS dengan Edit */}
+      <div>
+        <label className="block mb-2 font-medium text-gray-700">
+          Konten Berita *
+        </label>
+        {isClient && (
           <div className="border border-gray-300 rounded-lg overflow-hidden">
             <MenuBar editor={editor} />
             <EditorContent
@@ -375,8 +408,8 @@ export default function TambahBeritaClient() {
               className="min-h-[400px] p-4 prose max-w-none focus:outline-none"
             />
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Featured Image */}
       <div>
@@ -391,13 +424,13 @@ export default function TambahBeritaClient() {
           required
         />
         <p className="text-sm text-gray-500 mt-1">
-          Ukuran maksimal: 1MB. Format: JPG, PNG, WebP, AVIF
+          Ukuran maksimal: 1000KB. Format: JPEG, PNG, WebP, Avif
         </p>
 
         {/* Image Preview */}
         {preview && (
           <div className="mt-4">
-            <p className="text-sm font-medium mb-2">Preview:</p>
+            <p className="text-sm font-medium mb-2">Preview gambar:</p>
             <div className="relative w-64 h-48 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden">
               <Image
                 src={preview}
@@ -424,11 +457,7 @@ export default function TambahBeritaClient() {
           disabled={loading}
           className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition"
         >
-          {loading
-            ? "Menyimpan..."
-            : form.status === "published"
-            ? "💫 Terbitkan Berita"
-            : "💾 Simpan Draft"}
+          {loading ? "Menyimpan..." : "Tambah Berita"}
         </button>
       </div>
     </form>

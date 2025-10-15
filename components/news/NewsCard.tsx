@@ -1,7 +1,8 @@
 // components/news/NewsCard.tsx
+
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -79,7 +80,7 @@ export default function NewsCard({
         setTimeout(() => setCopied(false), 2000);
       } catch (error) {
         // Fallback for older browsers
-        console.log(error)
+        console.log(error);
         const textArea = document.createElement("textarea");
         textArea.value = url;
         document.body.appendChild(textArea);
@@ -100,6 +101,19 @@ export default function NewsCard({
     return count.toString();
   };
 
+  const [imageError, setImageError] = useState(false);
+  const [imageSrc, setImageSrc] = useState(imageUrl);
+
+  useEffect(() => {
+    setImageSrc(imageUrl);
+    setImageError(false);
+  }, [imageUrl]);
+
+  const handleImageError = () => {
+    setImageError(true);
+    setImageSrc("/images/default-news.jpg");
+  };
+
   return (
     <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 border-0 shadow-md">
       {/* Image with overlay effect */}
@@ -110,6 +124,7 @@ export default function NewsCard({
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-500"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          onError={handleImageError}
         />
 
         {/* Gradient overlay */}

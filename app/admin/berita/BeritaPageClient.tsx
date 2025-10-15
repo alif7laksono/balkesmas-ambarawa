@@ -1,4 +1,5 @@
 // app/admin/berita/BeritaPageClient.tsx
+
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
@@ -59,6 +60,8 @@ export default function BeritaPageClient({ news }: NewsProps) {
       </div>
     );
   }
+
+  
 
   return (
     <div className="overflow-x-auto border rounded-lg shadow">

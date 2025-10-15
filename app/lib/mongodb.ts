@@ -1,10 +1,11 @@
-// app/lib/mongodb.ts - improve connection handling
+// app/lib/mongodb.ts
+
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI as string;
+const MONGODB_URI = process.env.MONGODB_URI!;
 
 if (!MONGODB_URI) {
-  throw new Error("Please define the MONGODB_URI in .env.local");
+  throw new Error("Please define MONGODB_URI environment variable");
 }
 
 interface MongooseCache {
@@ -12,12 +13,11 @@ interface MongooseCache {
   promise: Promise<typeof mongoose> | null;
 }
 
-// Global cache untuk development (hot reload)
 const globalWithMongoose = global as typeof globalThis & {
   mongoose?: MongooseCache;
 };
 
-const cached: MongooseCache = globalWithMongoose.mongoose || {
+const cached: MongooseCache = globalWithMongoose.mongoose ?? {
   conn: null,
   promise: null,
 };
@@ -34,6 +34,9 @@ export async function connectDB() {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
+      maxPoolSize: 10,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
     };
 
     cached.promise = mongoose
@@ -44,7 +47,7 @@ export async function connectDB() {
       })
       .catch((error) => {
         console.error("❌ MongoDB connection failed:", error);
-        cached.promise = null; // Reset promise on error
+        cached.promise = null;
         throw error;
       });
   }

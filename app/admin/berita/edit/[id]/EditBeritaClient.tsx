@@ -1,4 +1,5 @@
 // app/admin/berita/edit/[id]/EditBeritaClient.tsx
+
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -9,17 +10,7 @@ import TextAlign from "@tiptap/extension-text-align";
 import Underline from "@tiptap/extension-underline";
 import Image from "next/image";
 import { useSlugGenerator } from "@/app/hooks/useSlugGenerator";
-
-type NewsType = {
-  _id: string;
-  title: string;
-  content: string;
-  category: { _id: string; name: string };
-  image: string;
-  slug: string;
-  status: string;
-  eventDate: Date;
-};
+import { NewsType } from "@/app/utils/types";
 
 interface MenuBarProps {
   editor: Editor | null;

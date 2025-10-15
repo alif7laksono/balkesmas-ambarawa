@@ -75,7 +75,7 @@ export async function PUT(
       const bytes = await imageFile.arrayBuffer();
       const buffer = Buffer.from(bytes);
 
-      const Key = generateFileKey("news", "images", File.name, "images");
+      const Key = generateFileKey("news", "images", imageFile.name, "images");
 
       const command = new PutObjectCommand({
         Bucket: process.env.S3_BUCKET_NAME!,

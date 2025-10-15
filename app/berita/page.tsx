@@ -1,4 +1,5 @@
 // app/berita/page.tsx
+
 import NewsCard from "@/components/news/NewsCard";
 import { News } from "@/app/utils/types";
 import Navbar from "@/app/components/Navbar";

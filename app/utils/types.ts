@@ -54,6 +54,17 @@ export interface News {
   };
 }
 
+export type NewsType = {
+  _id: string;
+  title: string;
+  content: string;
+  category: { _id: string; name: string };
+  image: string;
+  slug: string;
+  status: string;
+  eventDate: Date;
+};
+
 export interface NavLink {
   name: string;
   href: string;
