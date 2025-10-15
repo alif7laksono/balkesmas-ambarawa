@@ -18,15 +18,66 @@ interface PageProps {
 }
 
 async function getNewsDetail(slug: string) {
-  await connectDB();
+  try {
+    await connectDB();
 
-  const news = await News.findOne({ slug }).populate("category");
+    const news = await News.findOne({ slug }).populate("category").lean(); // Use lean() for better performance
 
-  if (!news) {
+    if (!news) {
+      console.log(`News with slug "${slug}" not found`);
+      return null;
+    }
+
+    // Convert MongoDB ObjectId to string
+    return JSON.parse(JSON.stringify(news));
+  } catch (error) {
+    console.error("Error in getNewsDetail:", error);
     return null;
   }
+}
 
-  return JSON.parse(JSON.stringify(news));
+export async function generateStaticParams() {
+  try {
+    await connectDB();
+    const news = await News.find({}, "slug").lean();
+
+    return news.map((item) => ({
+      slug: item.slug,
+    }));
+  } catch (error) {
+    console.error("Error generating static params:", error);
+    return [];
+  }
+}
+
+// Generate metadata for SEO
+export async function generateMetadata({ params }: PageProps) {
+  try {
+    const { slug } = await params;
+    const news = await getNewsDetail(slug);
+
+    if (!news) {
+      return {
+        title: "Berita Tidak Ditemukan",
+      };
+    }
+
+    return {
+      title: news.title,
+      description: news.excerpt || news.content?.substring(0, 160),
+      openGraph: {
+        title: news.title,
+        description: news.excerpt || news.content?.substring(0, 160),
+        images: news.image ? [news.image] : [],
+        type: "article",
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      title: "Berita",
+    };
+  }
 }
 
 export default async function NewsDetailPage({ params }: PageProps) {
