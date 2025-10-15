@@ -7,11 +7,19 @@ const nextConfig: NextConfig = {
   },
   images: {
     unoptimized: true,
+    domains: ["nos.wjv-1.neo.id"],
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "veslavia-bucket.nos.wjv-1.neo.id",
-        pathname: "**",
+        hostname: "nos.wjv-1.neo.id",
+        port: "",
+        pathname: "/veslavia-bucket/**",
+      },
+      {
+        protocol: "https",
+        hostname: "balkesambarawa.dinkesjatengprov.go.id",
+        port: "",
+        pathname: "/**",
       },
     ],
   },
