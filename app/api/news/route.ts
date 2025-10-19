@@ -40,7 +40,7 @@ interface NewsLeanWithPopulate {
 type NewsLeanResult = FlattenMaps<NewsLeanWithPopulate>;
 
 // ✅ Helper function untuk convert ke NewsLean
-export function convertToNewsLean(newsItem: NewsLeanResult): NewsLean {
+function convertToNewsLean(newsItem: NewsLeanResult): NewsLean {
   return {
     _id: newsItem._id?.toString() || "",
     title: newsItem.title,
