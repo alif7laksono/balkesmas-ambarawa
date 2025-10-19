@@ -7,11 +7,7 @@ export async function middleware(req: NextRequest) {
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
   // path yang dilindungi
-  const protectedPaths = [
-    "/admin/categories",
-    "/admin/news",
-    "/admin/suggestions",
-  ];
+  const protectedPaths = ["/admin/*", "/api/*"];
   const isProtected = protectedPaths.some((path) =>
     req.nextUrl.pathname.startsWith(path)
   );

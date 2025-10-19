@@ -1,7 +1,7 @@
 // app/berita/page.tsx
 
 import NewsCard from "@/components/news/NewsCard";
-import { News } from "@/app/utils/types";
+import { NewsType } from "@/app/utils/types";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import NewsFilter from "@/components/news/NewsFilter";
@@ -19,8 +19,6 @@ async function getNews(category?: string, search?: string) {
   if (queryString) {
     url += `?${queryString}`;
   }
-
-  console.log("🔗 Fetching from:", url);
 
   try {
     const res = await fetch(url, {
@@ -92,18 +90,6 @@ function NewsError({
   );
 }
 
-// Loading component
-function NewsLoading() {
-  return (
-    <div className="text-center py-12">
-      <div className="max-w-md mx-auto">
-        <div className="text-6xl mb-4">⏳</div>
-        <p className="text-gray-600">Memuat berita...</p>
-      </div>
-    </div>
-  );
-}
-
 export default async function NewsPage({
   searchParams,
 }: {
@@ -130,10 +116,10 @@ export default async function NewsPage({
     // Handle null or undefined data
     const data = newsData?.data || [];
     const pagination = newsData?.pagination || null;
+ 
 
     // Validate data structure
     if (!Array.isArray(data)) {
-      console.error("Invalid data format received:", newsData);
       return (
         <div>
           <Navbar />
@@ -200,13 +186,13 @@ export default async function NewsPage({
           {data.length > 0 ? (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {data.map((item: News) => (
+                {data.map((item: NewsType) => (
                   <NewsCard
                     key={item._id}
                     _id={item._id}
                     title={item.title}
                     content={item.excerpt}
-                    imageUrl={item.image}
+                    imageKey={item.imageKey}
                     slug={item.slug}
                     createdAt={item.createdAt}
                     eventDate={item.eventDate}

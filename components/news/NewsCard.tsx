@@ -13,24 +13,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-
-interface NewsCardProps {
-  _id: string;
-  title: string;
-  content: string;
-  imageUrl: string;
-  slug: string;
-  createdAt: string;
-  eventDate: Date;
-  category?: string;
-  readTime?: number;
-  views?: number;
-}
+import { NewsCardProps } from "@/app/utils/types";
 
 export default function NewsCard({
   title,
   content,
-  imageUrl,
+  imageKey,
   slug,
   eventDate,
   category,
@@ -102,24 +90,27 @@ export default function NewsCard({
   };
 
   const [imageError, setImageError] = useState(false);
-  const [imageSrc, setImageSrc] = useState(imageUrl);
+  const [imageSrc, setImageSrc] = useState(imageKey);
 
   useEffect(() => {
-    setImageSrc(imageUrl);
+    setImageSrc(imageKey);
     setImageError(false);
-  }, [imageUrl]);
+  }, [imageKey]);
 
   const handleImageError = () => {
     setImageError(true);
-    setImageSrc("/images/default-news.jpg");
+    setImageSrc("/uploads/default-news.jpg");
   };
+
+  console.log(imageError);
+  console.log(imageSrc);
 
   return (
     <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 border-0 shadow-md">
       {/* Image with overlay effect */}
       <div className="relative h-48 md:h-60 w-full overflow-hidden">
         <Image
-          src={imageUrl || "/images/default-news.jpg"}
+          src={imageKey || "/uploads/default-news.jpg"}
           alt={title}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-500"

@@ -1,5 +1,8 @@
+// app/utils/types.ts
+
 import { Document, Types } from "mongoose";
 
+// ✅ Base Interfaces
 export interface ICategory extends Document {
   name: string;
   description?: string;
@@ -11,7 +14,8 @@ export interface INews extends Document {
   title: string;
   content: string;
   excerpt: string;
-  image: string;
+  image?: string;
+  imageKey?: string;
   slug: string;
   status: "draft" | "published" | "archived";
   metaTitle?: string;
@@ -23,6 +27,34 @@ export interface INews extends Document {
   updatedAt: Date;
 }
 
+// ✅ Extended Interfaces
+export interface NewsDocument extends INews {
+  _id: Types.ObjectId;
+}
+
+export interface NewsLean {
+  _id: string;
+  title: string;
+  content: string;
+  excerpt: string;
+  imageKey?: string; // ✅ Optional
+  image?: string; // ✅ Tambahkan untuk data existing
+  slug: string;
+  status: "draft" | "published" | "archived";
+  metaTitle?: string;
+  metaDescription?: string;
+  date: string;
+  eventDate: string;
+  category: {
+    _id: string;
+    name: string;
+    description?: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+  __v?: number;
+}
+
 export interface UpdateNewsData {
   title: string;
   content: string;
@@ -31,6 +63,7 @@ export interface UpdateNewsData {
   slug?: string;
   status?: string;
   image?: string;
+  imageKey?: string;
   excerpt?: string;
 }
 
@@ -43,8 +76,10 @@ export interface Category {
 export interface News {
   _id: string;
   title: string;
+  content: string;
   excerpt: string;
-  image: string;
+  imageKey: string;
+  image?: string;
   slug: string;
   createdAt: string;
   eventDate: Date;
@@ -52,18 +87,25 @@ export interface News {
     _id: string;
     name: string;
   };
+  status?: string;
+  metaTitle?: string;
+  metaDescription?: string;
 }
 
-export type NewsType = {
+export type NewsType = News;
+
+export interface NewsCardProps {
   _id: string;
   title: string;
   content: string;
-  category: { _id: string; name: string };
-  image: string;
+  imageKey: string;
   slug: string;
-  status: string;
+  createdAt: string;
   eventDate: Date;
-};
+  category?: string;
+  readTime?: number;
+  views?: number;
+}
 
 export interface NavLink {
   name: string;
@@ -110,15 +152,7 @@ export interface TestSubResult {
 }
 
 export type NewsProps = {
-  news: {
-    _id: string;
-    title: string;
-    content: string;
-    image: string;
-    category?: { _id: string; name: string };
-    createdAt: string;
-    eventDate: Date;
-  }[];
+  news: News[];
 };
 
 export interface NewsQuery {
@@ -126,3 +160,27 @@ export interface NewsQuery {
   title?: { $regex: string; $options: string };
   category?: string;
 }
+
+// ✅ Type untuk hasil Mongoose lean()
+export type NewsLeanResult = {
+  _id: Types.ObjectId;
+  title: string;
+  content: string;
+  excerpt: string;
+  imageKey?: string; // ✅ Optional
+  image?: string; // ✅ Untuk data existing
+  slug: string;
+  status: "draft" | "published" | "archived";
+  metaTitle?: string;
+  metaDescription?: string;
+  date: Date;
+  eventDate: Date;
+  category: {
+    _id: Types.ObjectId;
+    name: string;
+    description?: string;
+  };
+  createdAt: Date;
+  updatedAt: Date;
+  __v?: number;
+};

@@ -13,7 +13,7 @@ export interface DeleteImageResponse {
   message: string;
 }
 
-export interface BatchImageUrlsResponse {
+export interface BatchimageKeysResponse {
   urls: Array<{
     key: string;
     url: string;
@@ -43,7 +43,7 @@ export const uploadImageToS3 = async (
   return response.json();
 };
 
-export const getImageUrl = async (
+export const getimageKey = async (
   category: string,
   pathname: string,
   imgname: string
@@ -76,9 +76,9 @@ export const deleteImageFromS3 = async (
   return response.json();
 };
 
-export const getBatchImageUrls = async (
+export const getBatchimageKeys = async (
   keys: string[]
-): Promise<BatchImageUrlsResponse> => {
+): Promise<BatchimageKeysResponse> => {
   const response = await fetch("/api/files/images/batch", {
     method: "POST",
     headers: {

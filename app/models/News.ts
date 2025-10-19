@@ -19,9 +19,12 @@ const NewsSchema: Schema = new Schema(
       required: true,
       maxlength: 160,
     },
+    imageKey: {
+      type: String,
+      required: false,
+    },
     image: {
       type: String,
-      required: true,
     },
     slug: {
       type: String,
@@ -41,7 +44,6 @@ const NewsSchema: Schema = new Schema(
       type: String,
       maxlength: 160,
     },
-
     date: {
       type: Date,
       default: Date.now,
@@ -51,15 +53,27 @@ const NewsSchema: Schema = new Schema(
       required: true,
       default: Date.now,
     },
-
     category: {
       type: Schema.Types.ObjectId,
       ref: "Category",
       required: true,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
 );
+
+// NewsSchema.virtual("imageKey").get(function () {
+//   if (this.imageKey) {
+//     return `https://${
+//       process.env.S3_BUCKET_NAME
+//     }.${process.env.S3_ENDPOINT?.replace("https://", "")}/${this.imageKey}`;
+//   }
+//   return this.image;
+// });
 
 const News = models.News || mongoose.model<INews>("News", NewsSchema);
 export default News;
