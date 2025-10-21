@@ -123,7 +123,7 @@ export default function NewsCard({
 
         {/* Category badge */}
         {category && (
-          <Badge className="absolute top-3 left-3 bg-primary/90 hover:bg-primary">
+          <Badge className="absolute bottom-3 right-3 bg-primary/90 hover:bg-primary">
             {category}
           </Badge>
         )}

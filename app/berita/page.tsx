@@ -1,9 +1,9 @@
 // app/berita/page.tsx
 
 import NewsCard from "@/components/news/NewsCard";
-import { NewsType } from "@/app/utils/types";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
+import { NewsType } from "@/app/utils/types";
 import NewsFilter from "@/components/news/NewsFilter";
 import { Category } from "@/app/utils/types";
 import Link from "next/link";
