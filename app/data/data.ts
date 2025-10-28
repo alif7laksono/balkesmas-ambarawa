@@ -24,6 +24,7 @@ export const navLinks: NavLink[] = [
       { name: "Masyarakat", href: "/pelayanan/masyarakat" },
     ],
   },
+  { name: "Berita", href: "/berita" },
   // {
   //   name: "Layanan",
   //   href: "/layanan",

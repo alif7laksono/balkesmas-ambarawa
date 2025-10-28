@@ -9,13 +9,78 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface NewsComponentProps {
   data: News;
+  isLoading?: boolean;
 }
 
-export default function NewsComponent({ data }: NewsComponentProps) {
+export default function NewsComponent({
+  data,
+  isLoading = false,
+}: NewsComponentProps) {
   const news = data;
+
+  // Skeleton Loading State
+  if (isLoading || !news) {
+    return (
+      <div className="min-h-screen flex flex-col bg-gray-50">
+        <Navbar />
+        <main className="flex-1">
+          <section className="relative py-10 md:py-16">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+              {/* Breadcrumbs Skeleton */}
+              <div className="text-sm text-gray-600 mb-6 flex flex-wrap items-center space-x-1">
+                <Skeleton className="h-4 w-16" />
+                <Skeleton className="h-4 w-4 rounded-full" />
+                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-4 w-4 rounded-full" />
+                <Skeleton className="h-4 w-40" />
+              </div>
+
+              {/* Title & Category Skeleton */}
+              <div className="mb-8">
+                <Skeleton className="h-6 w-24 rounded-full mb-3" />
+                <Skeleton className="h-10 w-3/4 mb-2" />
+                <Skeleton className="h-4 w-48" />
+              </div>
+
+              {/* Featured Image Skeleton */}
+              <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-sm border border-gray-200 mb-10">
+                <Skeleton className="h-full w-full" />
+              </div>
+
+              {/* Content Skeleton */}
+              <div className="space-y-4">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-3/4" />
+                <div className="h-8"></div>
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-5/6" />
+                <div className="h-8"></div>
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-4/5" />
+              </div>
+
+              {/* Share Section Skeleton */}
+              <div className="mt-12 border-t pt-6 flex items-center justify-between flex-wrap gap-4">
+                <Skeleton className="h-5 w-32" />
+                <div className="flex gap-3">
+                  <Skeleton className="h-9 w-9 rounded-full" />
+                  <Skeleton className="h-9 w-9 rounded-full" />
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   console.log("Kategori berita:", data.category.name);
 
@@ -113,7 +178,7 @@ export default function NewsComponent({ data }: NewsComponentProps) {
 
             {/* Share Section */}
             <motion.div
-              className="mt-12 border-t pt-6 flex items-center justify-between flex-wrap gap-4"
+              className="mt-12 border-t pt-6 flex items-center justify-start flex-wrap gap-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8, duration: 0.5 }}

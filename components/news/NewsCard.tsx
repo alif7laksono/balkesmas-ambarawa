@@ -14,6 +14,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { NewsCardProps } from "@/app/utils/types";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function NewsCard({
   title,
@@ -27,7 +28,16 @@ export default function NewsCard({
 }: NewsCardProps) {
   const [isNavigating, setIsNavigating] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const displayDate = eventDate ? new Date(eventDate) : new Date();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000); // Adjust timing as needed
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // Prevent double click and multiple navigation
   const handleReadMore = (e: React.MouseEvent) => {
@@ -105,6 +115,55 @@ export default function NewsCard({
   console.log(imageError);
   console.log(imageSrc);
 
+  if (isLoading) {
+    return (
+      <Card className="overflow-hidden border-0 shadow-md">
+        {/* Image skeleton */}
+        <div className="relative h-48 md:h-60 w-full overflow-hidden">
+          <Skeleton className="h-full w-full" />
+        </div>
+
+        <CardContent className="p-4 space-y-3">
+          {/* Title skeleton */}
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-3/4" />
+            <Skeleton className="h-5 w-1/2" />
+          </div>
+
+          {/* Content skeleton */}
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-2/3" />
+          </div>
+
+          {/* Metadata skeleton */}
+          <div className="flex items-center justify-between text-xs pt-2 border-t">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-1">
+                <Skeleton className="h-3 w-3 rounded-full" />
+                <Skeleton className="h-3 w-20" />
+              </div>
+              <div className="flex items-center gap-1">
+                <Skeleton className="h-3 w-3 rounded-full" />
+                <Skeleton className="h-3 w-16" />
+              </div>
+            </div>
+            <div className="flex items-center gap-1">
+              <Skeleton className="h-3 w-3 rounded-full" />
+              <Skeleton className="h-3 w-12" />
+            </div>
+          </div>
+        </CardContent>
+
+        <CardFooter className="p-4 pt-0">
+          <Skeleton className="h-9 w-full" />
+        </CardFooter>
+      </Card>
+    );
+  }
+
+  // Actual Content
   return (
     <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 border-0 shadow-md">
       {/* Image with overlay effect */}
