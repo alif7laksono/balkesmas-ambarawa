@@ -7,6 +7,8 @@ import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Navbar from "@/app/components/Navbar";
+import Footer from "@/app/components/Footer";
 
 interface NewsComponentProps {
   data: News;
@@ -15,8 +17,11 @@ interface NewsComponentProps {
 export default function NewsComponent({ data }: NewsComponentProps) {
   const news = data;
 
+  console.log("Kategori berita:", data.category.name);
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
+      <Navbar />
       {/* Main content section */}
       <main className="flex-1">
         <motion.section
@@ -153,6 +158,7 @@ export default function NewsComponent({ data }: NewsComponentProps) {
           </div>
         </motion.section>
       </main>
+      <Footer />
     </div>
   );
 }

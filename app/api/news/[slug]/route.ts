@@ -20,7 +20,9 @@ export async function GET(
     await connectDB();
 
     // 🔹 Beri tipe eksplisit pada hasil query
-    const news = await News.findOne({ slug }).lean<INews>();
+    const news = await News.findOne({ slug })
+      .populate("category", "_id name")
+      .lean<INews>();
 
     if (!news) {
       return NextResponse.json(
