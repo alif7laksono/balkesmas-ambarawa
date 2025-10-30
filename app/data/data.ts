@@ -205,18 +205,18 @@ export const blogPosts = [
     id: 1,
     title: "Pelayanan Kesehatan Paru Terpadu",
     image: "/assets/images/blog/blog-image-1.png",
-    url: "#",
+    url: "/berita",
   },
   {
     id: 2,
     title: "Program Pencegahan TB di Wilayah Ambarawa",
     image: "/assets/images/blog/blog-image-2.jpg",
-    url: "#",
+    url: "/berita",
   },
   {
     id: 3,
     title: "Layanan Kesehatan Anak Berkualitas",
     image: "/assets/images/blog/blog-image-3.png",
-    url: "#",
+    url: "/berita",
   },
 ];

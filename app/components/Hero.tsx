@@ -54,18 +54,33 @@ export default function Hero() {
           </motion.p>
 
           <motion.div className="flex flex-wrap gap-4" variants={itemVariants}>
-            <Button
-              size={isMobile ? "default" : "lg"}
-              className="bg-gray-950 hover:bg-gray-800 text-white cursor-pointer"
+            <a
+              href="https://simaswilyam.dinkesjatengprov.go.id/daftar/#/home"
+              className="text-black font-bold hover:text-red-600 transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              PENDAFTARAN
-            </Button>
+              <Button
+                size={isMobile ? "default" : "lg"}
+                className="bg-gray-950 hover:bg-gray-800 text-white cursor-pointer"
+              >
+                PENDAFTARAN
+              </Button>
+            </a>
+
             <Button
               variant="outline"
               size={isMobile ? "default" : "lg"}
               className="border-white hover:bg-white/10 transition-colors cursor-pointer"
             >
-              TENTANG KAMI
+              <a
+                href="https://balkesambarawa.dinkesjatengprov.go.id/profil/tentang-kami"
+                className="text-black font-bold hover:text-red-600 transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                TENTANG KAMI
+              </a>
             </Button>
           </motion.div>
 

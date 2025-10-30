@@ -99,10 +99,17 @@ export default function TentangKami() {
             </motion.div>
 
             <motion.div variants={itemVariants}>
-              <Button size={isMobile ? "default" : "lg"}>
-                Selengkapnya
-                <IconArrowRight className="ml-2" size={18} />
-              </Button>
+              <a
+                href="https://balkesambarawa.dinkesjatengprov.go.id/profil/tentang-kami"
+                className="text-black font-bold hover:text-red-600 transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button size={isMobile ? "default" : "lg"}>
+                  Selengkapnya
+                  <IconArrowRight className="ml-2" size={18} />
+                </Button>
+              </a>
             </motion.div>
           </motion.div>
         </motion.div>

@@ -27,7 +27,7 @@ export default function JamPelayanan() {
     {
       icon: <IconStethoscope className="w-6 h-6" />,
       title: "Rawat Jalan",
-      schedule: "Senin-Sabtu: 07.00 - Selesai",
+      schedule: "Senin-Sabtu: 07.00 - 14.00",
     },
     {
       icon: <IconCalendar className="w-6 h-6" />,
@@ -91,7 +91,14 @@ export default function JamPelayanan() {
             </motion.div>
 
             <motion.div variants={itemVariants}>
-              <Button size={isMobile ? "default" : "lg"}>Selengkapnya</Button>
+              <a
+                href="/informasi/jadwal-praktek-dokter"
+                className="text-black font-bold hover:text-red-600 transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button size={isMobile ? "default" : "lg"}>Selengkapnya</Button>
+              </a>
             </motion.div>
           </motion.div>
 
